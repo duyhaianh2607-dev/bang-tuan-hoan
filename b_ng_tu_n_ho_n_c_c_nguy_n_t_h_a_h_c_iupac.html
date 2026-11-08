@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>Bảng Tuần Hoàn Các Nguyên Tố Hóa Học IUPAC</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            /* Tối ưu trải nghiệm chạm trên thiết bị di động */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Grid layout cho Bảng tuần hoàn 18 cột */
+        .ptable-grid {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(46px, 1fr));
+            gap: 4px;
+        }
+
+        @media (min-width: 768px) {
+            .ptable-grid {
+                grid-template-columns: repeat(18, minmax(54px, 1fr));
+                gap: 5px;
+            }
+        }
+
+        .ptable-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+        }
+
+        .ptable-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        /* Phân loại màu sắc các nhóm nguyên tố */
+        .cat-phi-kim { background-color: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.5); color: #4ade80; }
+        .cat-khi-hiem { background-color: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.5); color: #c084fc; }
+        .cat-kim-loai-kiem { background-color: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.5); color: #f87171; }
+        .cat-kim-loai-kiem-tho { background-color: rgba(249, 115, 22, 0.2); border-color: rgba(249, 115, 22, 0.5); color: #fb923c; }
+        .cat-ban-kim { background-color: rgba(20, 184, 166, 0.2); border-color: rgba(20, 184, 166, 0.5); color: #2dd4bf; }
+        .cat-halozen { background-color: rgba(236, 72, 153, 0.2); border-color: rgba(236, 72, 153, 0.5); color: #f472b6; }
+        .cat-kim-loai-chuyen-tiep { background-color: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); color: #60a5fa; }
+        .cat-kim-loai-yeu { background-color: rgba(107, 114, 128, 0.2); border-color: rgba(107, 114, 128, 0.5); color: #9ca3af; }
+        .cat-lanthan { background-color: rgba(234, 179, 8, 0.2); border-color: rgba(234, 179, 8, 0.5); color: #facc15; }
+        .cat-actini { background-color: rgba(217, 70, 239, 0.2); border-color: rgba(217, 70, 239, 0.5); color: #e879f9; }
+
+        .element-card {
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+            user-select: none;
+            min-height: 48px; /* Tối ưu kích thước vùng chạm trên di động */
+        }
+
+        .element-card:active, .element-card:hover {
+            transform: scale(1.1);
+            z-index: 30;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        .element-card.dimmed {
+            opacity: 0.15;
+            filter: grayscale(80%);
+        }
+
+        .element-card.highlighted {
+            animation: pulse 1.5s infinite alternate;
+            z-index: 10;
+        }
+
+        /* Styling cho tab active */
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border-color: #60a5fa;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-2 sm:p-4 md:p-6">
+
+    <!-- Header Section -->
+    <header class="max-w-7xl mx-auto w-full mb-4 md:mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3 md:pb-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-teal-300 to-purple-500 bg-clip-text text-transparent">
+                    BẢNG TUẦN HOÀN & TRA CỨU HÓA HỌC
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Chuẩn IUPAC - Tra cứu đa thiết bị (Mobile/Tablet/Desktop)</p>
+            </div>
+
+            <!-- Main Tab Navigation -->
+            <div class="flex items-center justify-between sm:justify-start gap-1.5 sm:gap-2 bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto">
+                <button id="tabPTable" class="tab-btn active px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-table-cells font-bold"></i><span>Bảng tuần hoàn</span>
+                </button>
+                <button id="tabSolubility" class="tab-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-droplet font-bold"></i><span>Bảng độ tan</span>
+                </button>
+                <button id="tabAcids" class="tab-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-flask font-bold"></i><span>Gốc Acid</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Toolbar / Search (Visible only in PTable tab) -->
+        <div id="ptableTools" class="mt-3 md:mt-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs sm:text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Tìm tên, ký hiệu, Z..." 
+                        class="w-full pl-9 pr-8 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+                
+                <!-- View Mode Switcher for Mobile & Reset Button -->
+                <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                    <!-- Mobile View Toggle (Grid vs Mobile List View) -->
+                    <div class="flex sm:hidden items-center bg-slate-800/80 p-0.5 rounded-lg border border-slate-700 text-xs">
+                        <button id="viewGridBtn" class="px-2.5 py-1.5 rounded-md font-semibold bg-blue-600 text-white"><i class="fa-solid fa-table-cells mr-1"></i>Lưới</button>
+                        <button id="viewListBtn" class="px-2.5 py-1.5 rounded-md font-semibold text-slate-400"><i class="fa-solid fa-list mr-1"></i>Danh sách</button>
+                    </div>
+
+                    <button id="resetFilterBtn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-1.5 ml-auto sm:ml-0">
+                        <i class="fa-solid fa-rotate-left"></i><span>Đặt lại</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Group Legends Filter -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] sm:text-xs font-medium scrollbar-none" id="categoryLegend">
+                <button data-cat="all" class="cat-btn active px-2.5 py-1 rounded-md bg-blue-600 text-white shadow-sm border border-blue-500 whitespace-nowrap">Tất cả</button>
+                <button data-cat="kim-loai-kiem" class="cat-btn px-2.5 py-1 rounded-md border cat-kim-loai-kiem whitespace-nowrap">Kim loại kiềm</button>
+                <button data-cat="kim-loai-kiem-tho" class="cat-btn px-2.5 py-1 rounded-md border cat-kim-loai-kiem-tho whitespace-nowrap">Kim loại kiềm thổ</button>
+                <button data-cat="kim-loai-chuyen-tiep" class="cat-btn px-2.5 py-1 rounded-md border cat-kim-loai-chuyen-tiep whitespace-nowrap">Chuyển tiếp</button>
+                <button data-cat="kim-loai-yeu" class="cat-btn px-2.5 py-1 rounded-md border cat-kim-loai-yeu whitespace-nowrap">Kim loại yếu</button>
+                <button data-cat="ban-kim" class="cat-btn px-2.5 py-1 rounded-md border cat-ban-kim whitespace-nowrap">Bán kim</button>
+                <button data-cat="phi-kim" class="cat-btn px-2.5 py-1 rounded-md border cat-phi-kim whitespace-nowrap">Phi kim</button>
+                <button data-cat="halozen" class="cat-btn px-2.5 py-1 rounded-md border cat-halozen whitespace-nowrap">Halogen</button>
+                <button data-cat="khi-hiem" class="cat-btn px-2.5 py-1 rounded-md border cat-khi-hiem whitespace-nowrap">Khí hiếm</button>
+                <button data-cat="lanthan" class="cat-btn px-2.5 py-1 rounded-md border cat-lanthan whitespace-nowrap">Lanthan</button>
+                <button data-cat="actini" class="cat-btn px-2.5 py-1 rounded-md border cat-actini whitespace-nowrap">Actini</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TAB 1: Periodic Table Layout Container -->
+    <main id="viewPTable" class="tab-view max-w-7xl mx-auto w-full mb-6 flex-grow">
+        <!-- 1. Grid Table Layout (Supports Horizontal Touch Swipe) -->
+        <div id="gridContainer" class="ptable-container">
+            <!-- IUPAC Group Numbers Header (1-18) -->
+            <div class="ptable-grid min-w-[920px] mb-1 text-center font-bold text-[10px] sm:text-xs text-slate-500">
+                <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div>
+                <div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
+                <div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div>
+            </div>
+
+            <!-- Main Periodic Table Grid -->
+            <div id="periodicGrid" class="ptable-grid min-w-[920px]">
+                <!-- JavaScript renders 118 elements -->
+            </div>
+
+            <!-- Separator for Lanthanides & Actinides -->
+            <div class="min-w-[920px] my-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500 px-2">
+                <span>* Dòng họ Lanthan (57 - 71)</span>
+                <span>** Dòng họ Actini (89 - 103)</span>
+            </div>
+
+            <!-- Lanthanide & Actinide Rows Grid -->
+            <div id="fBlockGrid" class="ptable-grid min-w-[920px]">
+                <!-- JavaScript renders Lanthanide and Actinide blocks -->
+            </div>
+        </div>
+
+        <!-- 2. Mobile List View (Optimized for Small Touch Screens) -->
+        <div id="mobileListView" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+            <!-- Dynamic Compact List rendered via JS -->
+        </div>
+    </main>
+
+    <!-- TAB 2: Solubility Table View -->
+    <main id="viewSolubility" class="tab-view max-w-7xl mx-auto w-full mb-6 flex-grow hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
+            <!-- Legend & Header -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-4">
+                <div>
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-droplet text-blue-400"></i> Bảng tính tan trong nước của Muối, Acid và Base
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">Được tính ở nhiệt độ phòng (~25°C, áp suất 1 atm)</p>
+                </div>
+                <!-- Solubility Badges Key -->
+                <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">T : Tan</span>
+                    <span class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40">K : Không tan (Tủa)</span>
+                    <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">Í : Ít tan</span>
+                    <span class="px-2.5 py-1 rounded bg-slate-700/50 text-slate-400 border border-slate-600/40">Ph : Phân hủy / Không tồn tại</span>
+                </div>
+            </div>
+
+            <!-- Quick Lookup Filters -->
+            <div class="flex flex-wrap items-center gap-4 mb-6 bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                    <label class="text-xs font-semibold text-slate-400">Cation (Dương):</label>
+                    <select id="solubilityCationSelect" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg p-2 focus:outline-none focus:border-blue-500">
+                        <option value="all">-- Tất cả Cation --</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs font-semibold text-slate-400">Anion (Âm):</label>
+                    <select id="solubilityAnionSelect" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg p-2 focus:outline-none focus:border-blue-500">
+                        <option value="all">-- Tất cả Anion --</option>
+                    </select>
+                </div>
+                <div id="solubilityQuickResult" class="text-xs font-bold text-blue-300 ml-auto hidden sm:block"></div>
+            </div>
+
+            <!-- Table Matrix Container -->
+            <div class="overflow-x-auto rounded-xl border border-slate-800 max-h-[600px] overflow-y-auto">
+                <table class="w-full text-center text-xs border-collapse" id="solubilityMatrixTable">
+                    <!-- Dynamic Table Generated by JS -->
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- TAB 3: Common Acid Radicals View -->
+    <main id="viewAcids" class="tab-view max-w-7xl mx-auto w-full mb-6 flex-grow hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
+            <div class="border-b border-slate-800 pb-4 mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-flask text-teal-400"></i> Bảng Tra Cứu Gốc Acid Phổ Biến
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Danh sách công thức, hóa trị, tên gọi và tính chất hóa học quan trọng của các gốc acid</p>
+            </div>
+
+            <!-- Acid Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="acidRadicalsGrid">
+                <!-- Dynamic Acid Cards Generated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto w-full border-t border-slate-800 pt-4 text-center text-xs text-slate-500">
+        <p>Bảng tuần hoàn các nguyên tố hóa học chuẩn IUPAC - Đầy đủ 118 nguyên tố | Dữ liệu chính xác chuẩn quốc tế.</p>
+    </footer>
+
+    <!-- Element Detail Modal Pop-up -->
+    <div id="elementModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative animate-fadeIn" id="modalContent">
+            <!-- Close Button -->
+            <button id="closeModalBtn" class="absolute top-3 right-3 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors z-10">
+                <i class="fa-solid fa-xmark text-base sm:text-lg"></i>
+            </button>
+
+            <!-- Modal Dynamic Content Header -->
+            <div id="modalHeader" class="p-4 sm:p-6 border-b border-slate-800 relative overflow-hidden">
+                <div class="flex items-center gap-4 sm:gap-6 relative z-10">
+                    <div id="modalBigSymbol" class="w-18 h-18 sm:w-24 sm:h-24 p-2 rounded-xl border-2 flex flex-col items-center justify-center font-bold shadow-lg shrink-0">
+                        <span id="modalAtomicNum" class="text-[10px] sm:text-xs opacity-75 self-start"></span>
+                        <span id="modalSymbol" class="text-2xl sm:text-4xl my-auto"></span>
+                        <span id="modalMass" class="text-[9px] sm:text-[10px] opacity-75"></span>
+                    </div>
+                    <div>
+                        <span id="modalCategoryBadge" class="inline-block px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-1.5 border"></span>
+                        <h2 id="modalNameVi" class="text-2xl sm:text-3xl font-extrabold text-white"></h2>
+                        <h3 id="modalNameEn" class="text-xs sm:text-sm font-medium text-slate-400 italic"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Dynamic Details Grid -->
+            <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                <!-- Quick Info Cards Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+                    <div class="bg-slate-800/50 p-2.5 sm:p-3 rounded-lg border border-slate-800">
+                        <span class="text-[10px] sm:text-[11px] text-slate-400 block mb-0.5"><i class="fa-solid fa-layer-group text-blue-400 mr-1"></i>Chu kỳ & Nhóm</span>
+                        <span id="modalPeriodGroup" class="text-xs sm:text-sm font-semibold text-slate-200"></span>
+                    </div>
+                    <div class="bg-slate-800/50 p-2.5 sm:p-3 rounded-lg border border-slate-800">
+                        <span class="text-[10px] sm:text-[11px] text-slate-400 block mb-0.5"><i class="fa-solid fa-temperature-half text-amber-400 mr-1"></i>Trạng thái</span>
+                        <span id="modalState" class="text-xs sm:text-sm font-semibold text-slate-200"></span>
+                    </div>
+                    <div class="bg-slate-800/50 p-2.5 sm:p-3 rounded-lg border border-slate-800">
+                        <span class="text-[10px] sm:text-[11px] text-slate-400 block mb-0.5"><i class="fa-solid fa-bolt text-yellow-400 mr-1"></i>Độ âm điện</span>
+                        <span id="modalElectronegativity" class="text-xs sm:text-sm font-semibold text-slate-200"></span>
+                    </div>
+                    <div class="bg-slate-800/50 p-2.5 sm:p-3 rounded-lg border border-slate-800">
+                        <span class="text-[10px] sm:text-[11px] text-slate-400 block mb-0.5"><i class="fa-solid fa-ruler-combined text-teal-400 mr-1"></i>Bán kính (pm)</span>
+                        <span id="modalRadius" class="text-xs sm:text-sm font-semibold text-slate-200"></span>
+                    </div>
+                </div>
+
+                <!-- Detailed Specifications -->
+                <div class="space-y-2">
+                    <h4 class="text-[11px] uppercase tracking-wider font-bold text-slate-400 border-b border-slate-800 pb-1">Đặc tính Vật lý & Hóa học</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 text-xs sm:text-sm">
+                        <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                            <span class="text-slate-400">Cấu hình electron:</span>
+                            <span id="modalElectronConfig" class="font-mono text-blue-300 font-medium"></span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                            <span class="text-slate-400">Nhiệt độ nóng chảy:</span>
+                            <span id="modalMelting" class="text-slate-200 font-medium"></span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                            <span class="text-slate-400">Nhiệt độ sôi:</span>
+                            <span id="modalBoiling" class="text-slate-200 font-medium"></span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                            <span class="text-slate-400">Mật độ khối lượng:</span>
+                            <span id="modalDensity" class="text-slate-200 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History -->
+                <div class="space-y-1.5">
+                    <h4 class="text-[11px] uppercase tracking-wider font-bold text-slate-400 border-b border-slate-800 pb-1">Lịch sử phát hiện</h4>
+                    <div class="text-xs sm:text-sm text-slate-300 bg-slate-800/30 p-2.5 sm:p-3 rounded-lg border border-slate-800/80">
+                        <p><span class="text-slate-400">Năm phát hiện:</span> <span id="modalDiscoveredYear" class="font-semibold text-slate-200"></span></p>
+                        <p class="mt-0.5"><span class="text-slate-400">Người phát hiện:</span> <span id="modalDiscoveredBy" class="font-semibold text-slate-200"></span></p>
+                    </div>
+                </div>
+
+                <!-- Description & Applications -->
+                <div class="space-y-1.5">
+                    <h4 class="text-[11px] uppercase tracking-wider font-bold text-slate-400 border-b border-slate-800 pb-1">Mô tả & Ứng dụng thực tế</h4>
+                    <p id="modalDescription" class="text-xs sm:text-sm text-slate-300 leading-relaxed bg-slate-800/30 p-2.5 sm:p-3 rounded-lg border border-slate-800/80"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Mobile View Toggle & Logic Adjustments -->
+    <script>
+        // Database of 118 Elements with IUPAC Standard data in Vietnamese
+        const elementsData = [
+            { z: 1, sym: "H", nameVi: "Hydro", nameEn: "Hydrogen", mass: "1.008", cat: "phi-kim", period: 1, group: 1, config: "1s¹", state: "Khí", electro: 2.20, radius: 53, melt: -259.1, boil: -252.9, density: "0.0899 g/L", year: 1766, discoverer: "Henry Cavendish", desc: "Nguyên tố phổ biến nhất trong vũ trụ. Được dùng làm nhiên liệu tên lửa, sản xuất amoniac, lọc dầu và là thành phần của nước (H₂O)." },
+            { z: 2, sym: "He", nameVi: "Heli", nameEn: "Helium", mass: "4.0026", cat: "khi-hiem", period: 1, group: 18, config: "1s²", state: "Khí", electro: null, radius: 31, melt: -272.2, boil: -268.9, density: "0.1786 g/L", year: 1868, discoverer: "Pierre Janssen, Norman Lockyer", desc: "Khí trơ nhẹ thứ hai. Ứng dụng bơm khinh khí cầu, làm mát trong máy chụp cộng hưởng từ (MRI) và hàn kim loại." },
+            { z: 3, sym: "Li", nameVi: "Liti", nameEn: "Lithium", mass: "6.94", cat: "kim-loai-kiem", period: 2, group: 1, config: "[He] 2s¹", state: "Rắn", electro: 0.98, radius: 167, melt: 180.5, boil: 1342, density: "0.534 g/cm³", year: 1817, discoverer: "Johan August Arfwedson", desc: "Kim loại nhẹ nhất. Rất quan trọng trong sản xuất pin sạc Li-ion cho smartphone, laptop và xe điện." },
+            { z: 4, sym: "Be", nameVi: "Bêryli", nameEn: "Beryllium", mass: "9.0122", cat: "kim-loai-kiem-tho", period: 2, group: 2, config: "[He] 2s²", state: "Rắn", electro: 1.57, radius: 112, melt: 1287, boil: 2469, density: "1.85 g/cm³", year: 1798, discoverer: "Louis-Nicolas Vauquelin", desc: "Kim loại nhẹ, cứng và có điểm nóng chảy cao. Ứng dụng trong hợp kim hàng không vũ trụ và cửa sổ tia X." },
+            { z: 5, sym: "B", nameVi: "Bo", nameEn: "Boron", mass: "10.81", cat: "ban-kim", period: 2, group: 13, config: "[He] 2s² 2p¹", state: "Rắn", electro: 2.04, radius: 87, melt: 2076, boil: 3927, density: "2.34 g/cm³", year: 1808, discoverer: "J.L. Gay-Lussac, L.J. Thénard", desc: "Bán kim dùng trong sản xuất thủy tinh chịu nhiệt Borosilicate (Pyrex), chất bán dẫn và hóa chất nông nghiệp." },
+            { z: 6, sym: "C", nameVi: "Cacbon", nameEn: "Carbon", mass: "12.011", cat: "phi-kim", period: 2, group: 14, config: "[He] 2s² 2p²", state: "Rắn", electro: 2.55, radius: 67, melt: 3550, boil: 4027, density: "2.267 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Nền tảng của mọi sự sống hữu cơ. Xuất hiện dưới dạng kim cương, than chì, graphene và than hoạt tính." },
+            { z: 7, sym: "N", nameVi: "Nitơ", nameEn: "Nitrogen", mass: "14.007", cat: "phi-kim", period: 2, group: 15, config: "[He] 2s² 2p³", state: "Khí", electro: 3.04, radius: 56, melt: -210.0, boil: -195.8, density: "1.251 g/L", year: 1772, discoverer: "Daniel Rutherford", desc: "Chiếm 78% khí quyển Trái Đất. Dùng sản xuất phân bón hóa học, thuốc nổ và bảo quản thực phẩm dạng khí trơ." },
+            { z: 8, sym: "O", nameVi: "Oxy", nameEn: "Oxygen", mass: "15.999", cat: "phi-kim", period: 2, group: 16, config: "[He] 2s² 2p⁴", state: "Khí", electro: 3.44, radius: 48, melt: -218.8, boil: -183.0, density: "1.429 g/L", year: 1774, discoverer: "Joseph Priestley, Carl Wilhelm Scheele", desc: "Duy trì hô hấp cho động vật và sự cháy. Dùng trong y tế, luyện kim thép và công nghiệp hóa chất." },
+            { z: 9, sym: "F", nameVi: "Flo", nameEn: "Fluorine", mass: "18.998", cat: "halozen", period: 2, group: 17, config: "[He] 2s² 2p⁵", state: "Khí", electro: 3.98, radius: 42, melt: -219.6, boil: -188.1, density: "1.696 g/L", year: 1886, discoverer: "Henri Moissan", desc: "Phi kim có độ âm điện mạnh nhất. Dùng trong kem đánh răng (ngừa sâu răng), chảo chống dính Teflon và khí làm lạnh." },
+            { z: 10, sym: "Ne", nameVi: "Neon", nameEn: "Neon", mass: "20.180", cat: "khi-hiem", period: 2, group: 18, config: "[He] 2s² 2p⁶", state: "Khí", electro: null, radius: 38, melt: -248.6, boil: -246.1, density: "0.900 g/L", year: 1898, discoverer: "William Ramsay, Morris Travers", desc: "Khí hiếm phát ra ánh sáng đỏ-cam rực rỡ khi có dòng điện chạy qua, được ứng dụng rộng rãi trong đèn quảng cáo neon." },
+            { z: 11, sym: "Na", nameVi: "Natri", nameEn: "Sodium", mass: "22.990", cat: "kim-loai-kiem", period: 3, group: 1, config: "[Ne] 3s¹", state: "Rắn", electro: 0.93, radius: 190, melt: 97.8, boil: 883, density: "0.968 g/cm³", year: 1807, discoverer: "Humphry Davy", desc: "Kim loại kiềm mềm phản ứng mạnh với nước. Là thành phần của muối ăn (NaCl), xà phòng và đèn đường hơi natri." },
+            { z: 12, sym: "Mg", nameVi: "Magie", nameEn: "Magnesium", mass: "24.305", cat: "kim-loai-kiem-tho", period: 3, group: 2, config: "[Ne] 3s²", state: "Rắn", electro: 1.31, radius: 145, melt: 650, boil: 1090, density: "1.738 g/cm³", year: 1755, discoverer: "Joseph Black", desc: "Kim loại nhẹ cháy với ánh sáng trắng chói. Dùng trong hợp kim linh kiện ô tô, máy bay, pháo hoa và hợp chất y tế." },
+            { z: 13, sym: "Al", nameVi: "Nhôm", nameEn: "Aluminium", mass: "26.982", cat: "kim-loai-yeu", period: 3, group: 13, config: "[Ne] 3s² 3p¹", state: "Rắn", electro: 1.61, radius: 118, melt: 660.3, boil: 2470, density: "2.70 g/cm³", year: 1825, discoverer: "Hans Christian Ørsted", desc: "Kim loại phổ biến nhất trên vỏ Trái Đất. Nhẹ, bền, chống ăn mòn, dùng sản xuất lon nước, vỏ máy bay, cửa kính." },
+            { z: 14, sym: "Si", nameVi: "Silic", nameEn: "Silicon", mass: "28.085", cat: "ban-kim", period: 3, group: 14, config: "[Ne] 3s² 3p²", state: "Rắn", electro: 1.90, radius: 111, melt: 1414, boil: 3265, density: "2.33 g/cm³", year: 1824, discoverer: "Jöns Jacob Berzelius", desc: "Trái tim của ngành công nghiệp điện tử vi chip bán dẫn (Thung lũng Silicon), pin mặt trời và vật liệu xây dựng." },
+            { z: 15, sym: "P", nameVi: "Phốt pho", nameEn: "Phosphorus", mass: "30.974", cat: "phi-kim", period: 3, group: 15, config: "[Ne] 3s² 3p³", state: "Rắn", electro: 2.19, radius: 98, melt: 44.1, boil: 280.5, density: "1.823 g/cm³", year: 1669, discoverer: "Hennig Brand", desc: "Nguyên tố có nhiều dạng thù hình (trắng, đỏ). Rất cần thiết cho tế bào sinh học, phân bón NPK và diêm an toàn." },
+            { z: 16, sym: "S", nameVi: "Lưu huỳnh", nameEn: "Sulfur", mass: "32.06", cat: "phi-kim", period: 3, group: 16, config: "[Ne] 3s² 3p⁴", state: "Rắn", electro: 2.58, radius: 88, melt: 115.2, boil: 444.6, density: "2.07 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Chất rắn màu vàng tươi. Dùng để lưu hóa cao su, sản xuất axit sunfuric (H₂SO₄), thuốc nổ và dược phẩm." },
+            { z: 17, sym: "Cl", nameVi: "Clo", nameEn: "Chlorine", mass: "35.45", cat: "halozen", period: 3, group: 17, config: "[Ne] 3s² 3p⁵", state: "Khí", electro: 3.16, radius: 79, melt: -101.5, boil: -34.04, density: "3.214 g/L", year: 1774, discoverer: "Carl Wilhelm Scheele", desc: "Khí màu vàng lục có độc tính. Dùng tẩy trắng, khử trùng nước sinh hoạt/bể bơi và sản xuất nhựa PVC." },
+            { z: 18, sym: "Ar", nameVi: "Argon", nameEn: "Argon", mass: "39.948", cat: "khi-hiem", period: 3, group: 18, config: "[Ne] 3s² 3p⁶", state: "Khí", electro: null, radius: 71, melt: -189.3, boil: -185.8, density: "1.784 g/L", year: 1894, discoverer: "Lord Rayleigh, William Ramsay", desc: "Khí hiếm phổ biến nhất trên Trái Đất. Dùng tạo môi trường trơ trong hàn kim loại và bóng đèn dây tóc." },
+            { z: 19, sym: "K", nameVi: "Kali", nameEn: "Potassium", mass: "39.098", cat: "kim-loai-kiem", period: 4, group: 1, config: "[Ar] 4s¹", state: "Rắn", electro: 0.82, radius: 243, melt: 63.5, boil: 759, density: "0.862 g/cm³", year: 1807, discoverer: "Humphry Davy", desc: "Dưỡng chất khoáng thiết yếu cho sự sống động thực vật. Dùng làm phân bón nông nghiệp và xà phòng lỏng." },
+            { z: 20, sym: "Ca", nameVi: "Canxi", nameEn: "Calcium", mass: "40.078", cat: "kim-loai-kiem-tho", period: 4, group: 2, config: "[Ar] 4s²", state: "Rắn", electro: 1.00, radius: 194, melt: 842, boil: 1484, density: "1.55 g/cm³", year: 1808, discoverer: "Humphry Davy", desc: "Thành phần cấu tạo nên xương, răng và vỏ sò. Dùng làm xi măng, vôi sống (CaO) trong xây dựng." },
+            { z: 21, sym: "Sc", nameVi: "Scandi", nameEn: "Scandium", mass: "44.956", cat: "kim-loai-chuyen-tiep", period: 4, group: 3, config: "[Ar] 3d¹ 4s²", state: "Rắn", electro: 1.36, radius: 184, melt: 1541, boil: 2836, density: "2.985 g/cm³", year: 1879, discoverer: "Lars Fredrik Nilson", desc: "Kim loại nhẹ dùng trong hợp kim nhôm-scandi sản xuất gậy đánh golf, khung xe đạp đắt tiền và linh kiện máy bay." },
+            { z: 22, sym: "Ti", nameVi: "Titan", nameEn: "Titanium", mass: "47.867", cat: "kim-loai-chuyen-tiep", period: 4, group: 4, config: "[Ar] 3d² 4s²", state: "Rắn", electro: 1.54, radius: 176, melt: 1668, boil: 3287, density: "4.506 g/cm³", year: 1791, discoverer: "William Gregor", desc: "Cực kỳ bền, nhẹ và không bị ăn mòn. Ứng dụng trong cấy ghép y tế, hàng không, vỏ tàu vũ trụ và sơn titan trắng." },
+            { z: 23, sym: "V", nameVi: "Vanadi", nameEn: "Vanadium", mass: "50.942", cat: "kim-loai-chuyen-tiep", period: 4, group: 5, config: "[Ar] 3d³ 4s²", state: "Rắn", electro: 1.63, radius: 171, melt: 1910, boil: 3407, density: "6.11 g/cm³", year: 1801, discoverer: "Andrés Manuel del Río", desc: "Pha vào thép để tăng siêu độ cứng và chống mài mòn (thép Vanadi dùng làm cờ-lê, dụng cụ cơ khí)." },
+            { z: 24, sym: "Cr", nameVi: "Crom", nameEn: "Chromium", mass: "51.996", cat: "kim-loai-chuyen-tiep", period: 4, group: 6, config: "[Ar] 3d⁵ 4s¹", state: "Rắn", electro: 1.66, radius: 166, melt: 1907, boil: 2671, density: "7.19 g/cm³", year: 1797, discoverer: "Louis-Nicolas Vauquelin", desc: "Kim loại cứng nhất. Dùng mạ Crom sáng bóng cho xe máy/ô tô và là thành phần chính tạo nên thép không gỉ (Inox)." },
+            { z: 25, sym: "Mn", nameVi: "Mangan", nameEn: "Manganese", mass: "54.938", cat: "kim-loai-chuyen-tiep", period: 4, group: 7, config: "[Ar] 3d⁵ 4s²", state: "Rắn", electro: 1.55, radius: 161, melt: 1246, boil: 2061, density: "7.21 g/cm³", year: 1774, discoverer: "Johan Gottlieb Gahn", desc: "Không thể thiếu trong sản xuất thép hợp kim, pin kiềm khô (AA/AAA) và thuốc tím khử trùng (KMnO₄)." },
+            { z: 26, sym: "Fe", nameVi: "Sắt", nameEn: "Iron", mass: "55.845", cat: "kim-loai-chuyen-tiep", period: 4, group: 8, config: "[Ar] 3d⁶ 4s²", state: "Rắn", electro: 1.83, radius: 156, melt: 1538, boil: 2862, density: "7.874 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Kim loại sử dụng phổ biến nhất nền văn minh con người (luyện thép, xây dựng, cầu đường). Có trong hồng cầu máu." },
+            { z: 27, sym: "Co", nameVi: "Coban", nameEn: "Cobalt", mass: "58.933", cat: "kim-loai-chuyen-tiep", period: 4, group: 9, config: "[Ar] 3d⁷ 4s²", state: "Rắn", electro: 1.88, radius: 152, melt: 1495, boil: 2927, density: "8.90 g/cm³", year: 1735, discoverer: "Georg Brandt", desc: "Dùng chế tạo cực catốt pin Li-ion xe điện, nam siêu từ tính và phẩm màu xanh coban cho gốm sứ." },
+            { z: 28, sym: "Ni", nameVi: "Niken", nameEn: "Nickel", mass: "58.693", cat: "kim-loai-chuyen-tiep", period: 4, group: 10, config: "[Ar] 3d⁸ 4s²", state: "Rắn", electro: 1.91, radius: 149, melt: 1455, boil: 2913, density: "8.908 g/cm³", year: 1751, discoverer: "Axel Fredrik Cronstedt", desc: "Chống gỉ cực tốt. Dùng làm tiền xu, mạ chống gỉ, pin sạc Ni-MH và dây điện trở nhiệt." },
+            { z: 29, sym: "Cu", nameVi: "Đồng", nameEn: "Copper", mass: "63.546", cat: "kim-loai-chuyen-tiep", period: 4, group: 11, config: "[Ar] 3d¹⁰ 4s¹", state: "Rắn", electro: 1.90, radius: 145, melt: 1084.6, boil: 2562, density: "8.96 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Dẫn điện và dẫn nhiệt tuyệt vời. Dùng làm dây dẫn điện, ống nước, đồng thau/đồng điếu và tiền xu." },
+            { z: 30, sym: "Zn", nameVi: "Kẽm", nameEn: "Zinc", mass: "65.38", cat: "kim-loai-chuyen-tiep", period: 4, group: 12, config: "[Ar] 3d¹⁰ 4s²", state: "Rắn", electro: 1.65, radius: 142, melt: 419.5, boil: 907, density: "7.14 g/cm³", year: 1746, discoverer: "Andreas Sigismund Marggraf", desc: "Dùng để mạ tôn chống gỉ (tôn mạ kẽm), hợp kim đồng thau và viên bổ sung vi chất sức khỏe." },
+            { z: 31, sym: "Ga", nameVi: "Gali", nameEn: "Gallium", mass: "69.723", cat: "kim-loai-yeu", period: 4, group: 13, config: "[Ar] 3d¹⁰ 4s² 4p¹", state: "Rắn", electro: 1.81, radius: 136, melt: 29.76, boil: 2204, density: "5.91 g/cm³", year: 1875, discoverer: "Émile Lecoq de Boisbaudran", desc: "Nóng chảy ngay trên bàn tay người (29.76°C). Dùng sản xuất chất bán dẫn GaAs cho đèn LED và cảm biến." },
+            { z: 32, sym: "Ge", nameVi: "Gemani", nameEn: "Germanium", mass: "72.630", cat: "ban-kim", period: 4, group: 14, config: "[Ar] 3d¹⁰ 4s² 4p²", state: "Rắn", electro: 2.01, radius: 125, melt: 938.3, boil: 2833, density: "5.323 g/cm³", year: 1886, discoverer: "Clemens Winkler", desc: "Vật liệu bán dẫn quan trọng trong ống kính quang học hồng ngoại, cáp quang viễn thông và bóng bán dẫn." },
+            { z: 33, sym: "As", nameVi: "Asen (Thạch tín)", nameEn: "Arsenic", mass: "74.922", cat: "ban-kim", period: 4, group: 15, config: "[Ar] 3d¹⁰ 4s² 4p³", state: "Rắn", electro: 2.18, radius: 114, melt: 817, boil: 614, density: "5.727 g/cm³", year: 1250, discoverer: "Albertus Magnus", desc: "Được biết đến là độc chất nổi tiếng. Tuy nhiên vẫn dùng trong hợp kim chì bọc cáp và bán dẫn vi mạch." },
+            { z: 34, sym: "Se", nameVi: "Selen", nameEn: "Selenium", mass: "78.971", cat: "phi-kim", period: 4, group: 16, config: "[Ar] 3d¹⁰ 4s² 4p⁴", state: "Rắn", electro: 2.55, radius: 103, melt: 221, boil: 685, density: "4.81 g/cm³", year: 1817, discoverer: "Jöns Jacob Berzelius", desc: "Dẫn điện tốt hơn khi có ánh sáng chiếu vào. Dùng trong máy photo copy, tế bào quang điện và dầu gội trị gàu." },
+            { z: 35, sym: "Br", nameVi: "Brom", nameEn: "Bromine", mass: "79.904", cat: "halozen", period: 4, group: 17, config: "[Ar] 3d¹⁰ 4s² 4p⁵", state: "Lỏng", electro: 2.96, radius: 94, melt: -7.2, boil: 58.8, density: "3.102 g/cm³", year: 1826, discoverer: "Antoine Jérôme Balard", desc: "Phi kim duy nhất ở dạng lỏng ở nhiệt độ phòng, màu nâu đỏ bốc khói độc. Dùng làm chất chống cháy và thuốc dược phẩm." },
+            { z: 36, sym: "Kr", nameVi: "Kripton", nameEn: "Krypton", mass: "83.798", cat: "khi-hiem", period: 4, group: 18, config: "[Ar] 3d¹⁰ 4s² 4p⁶", state: "Khí", electro: 3.00, radius: 88, melt: -157.4, boil: -153.2, density: "3.749 g/L", year: 1898, discoverer: "William Ramsay, Morris Travers", desc: "Khí hiếm dùng trong bóng đèn chớp nhiếp ảnh tốc độ cao, đèn đường băng sân bay và laser y tế." },
+            { z: 37, sym: "Rb", nameVi: "Rubidi", nameEn: "Rubidium", mass: "85.468", cat: "kim-loai-kiem", period: 5, group: 1, config: "[Kr] 5s¹", state: "Rắn", electro: 0.82, radius: 265, melt: 39.3, boil: 688, density: "1.532 g/cm³", year: 1861, discoverer: "Robert Bunsen, Gustav Kirchhoff", desc: "Kim loại kiềm cực kỳ phản ứng. Dùng trong đồng hồ nguyên tử chính xác cao, linh kiện quang điện." },
+            { z: 38, sym: "Sr", nameVi: "Stronti", nameEn: "Strontium", mass: "87.62", cat: "kim-loai-kiem-tho", period: 5, group: 2, config: "[Kr] 5s²", state: "Rắn", electro: 0.95, radius: 219, melt: 777, boil: 1382, density: "2.64 g/cm³", year: 1790, discoverer: "Adair Crawford", desc: "Cháy tạo ra ngọn lửa màu đỏ rực rỡ. Ứng dụng chính trong sản xuất pháo hoa thắp sáng và pháo hiệu cứu hộ." },
+            { z: 39, sym: "Y", nameVi: "Ytri", nameEn: "Yttrium", mass: "88.906", cat: "kim-loai-chuyen-tiep", period: 5, group: 3, config: "[Kr] 4d¹ 5s²", state: "Rắn", electro: 1.22, radius: 212, melt: 1526, boil: 3336, density: "4.472 g/cm³", year: 1794, discoverer: "Johan Gadolin", desc: "Dùng chế tạo chất siêu dẫn nhiệt độ cao, vật liệu lân quang màn hình tivi và hợp kim chống nhiệt." },
+            { z: 40, sym: "Zr", nameVi: "Zirconi", nameEn: "Zirconium", mass: "91.224", cat: "kim-loai-chuyen-tiep", period: 5, group: 4, config: "[Kr] 4d² 5s²", state: "Rắn", electro: 1.33, radius: 206, melt: 1855, boil: 4409, density: "6.52 g/cm³", year: 1789, discoverer: "Martin Heinrich Klaproth", desc: "Chịu ăn mòn cao. Dùng làm vỏ thanh nhiên liệu hạt nhân và kim cương nhân tạo Cubic Zirconia (CZ)." },
+            { z: 41, sym: "Nb", nameVi: "Niobi", nameEn: "Niobium", mass: "92.906", cat: "kim-loai-chuyen-tiep", period: 5, group: 5, config: "[Kr] 4d⁴ 5s¹", state: "Rắn", electro: 1.6, radius: 198, melt: 2477, boil: 4744, density: "8.57 g/cm³", year: 1801, discoverer: "Charles Hatchett", desc: "Dùng trong nam châm siêu dẫn của máy gia tốc hạt, động cơ tên lửa và thép cường độ cao." },
+            { z: 42, sym: "Mo", nameVi: "Molibden", nameEn: "Molybdenum", mass: "95.95", cat: "kim-loai-chuyen-tiep", period: 5, group: 6, config: "[Kr] 4d⁵ 5s¹", state: "Rắn", electro: 2.16, radius: 190, melt: 2623, boil: 4639, density: "10.28 g/cm³", year: 1778, discoverer: "Carl Wilhelm Scheele", desc: "Điểm nóng chảy cực cao. Dùng gia cường độ bền cho thép chịu lực, tiếp điểm điện và chất xúc tác công nghiệp." },
+            { z: 43, sym: "Tc", nameVi: "Tecneti", nameEn: "Technetium", mass: "(98)", cat: "kim-loai-chuyen-tiep", period: 5, group: 7, config: "[Kr] 4d⁵ 5s²", state: "Rắn", electro: 1.9, radius: 183, melt: 2157, boil: 4265, density: "11.0 g/cm³", year: 1937, discoverer: "Emilio Segrè, Carlo Perrier", desc: "Nguyên tố nhân tạo đầu tiên. Đồng vị Tc-99m được dùng rộng rãi trong chẩn đoán hình ảnh y học hạt nhân." },
+            { z: 44, sym: "Ru", nameVi: "Ruteni", nameEn: "Ruthenium", mass: "101.07", cat: "kim-loai-chuyen-tiep", period: 5, group: 8, config: "[Kr] 4d⁷ 5s¹", state: "Rắn", electro: 2.2, radius: 178, melt: 2334, boil: 4150, density: "12.45 g/cm³", year: 1844, discoverer: "Karl Ernst Claus", desc: "Kim loại hiếm thuộc nhóm Bạch kim. Dùng làm chất tăng độ cứng cho Bạch kim/Pha-la-đi và đĩa cứng vi tính." },
+            { z: 45, sym: "Rh", nameVi: "Rodi", nameEn: "Rhodium", mass: "102.91", cat: "kim-loai-chuyen-tiep", period: 5, group: 9, config: "[Kr] 4d⁸ 5s¹", state: "Rắn", electro: 2.28, radius: 173, melt: 1964, boil: 3695, density: "12.41 g/cm³", year: 1803, discoverer: "William Hyde Wollaston", desc: "Một trong những kim loại quý đắt nhất thế giới. Dùng trong bộ chuyển đổi khí thải ô tô và mạ trang sức cao cấp." },
+            { z: 46, sym: "Pd", nameVi: "Paladi", nameEn: "Palladium", mass: "106.42", cat: "kim-loai-chuyen-tiep", period: 5, group: 10, config: "[Kr] 4d¹⁰", state: "Rắn", electro: 2.20, radius: 169, melt: 1554.9, boil: 2963, density: "12.02 g/cm³", year: 1803, discoverer: "William Hyde Wollaston", desc: "Hấp thụ Hydro cực tốt. Dùng làm chất xúc tác lọc khí thải xe hơi, trang sức vàng trắng và linh kiện điện tử." },
+            { z: 47, sym: "Ag", nameVi: "Bạc", nameEn: "Silver", mass: "107.87", cat: "kim-loai-chuyen-tiep", period: 5, group: 11, config: "[Kr] 4d¹⁰ 5s¹", state: "Rắn", electro: 1.93, radius: 165, melt: 961.8, boil: 2162, density: "10.49 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Kim loại dẫn điện và dẫn nhiệt tốt nhất trong tất cả các nguyên tố. Dùng làm trang sức, tiền xu, gương và pin." },
+            { z: 48, sym: "Cd", nameVi: "Cadimi", nameEn: "Cadmium", mass: "112.41", cat: "kim-loai-chuyen-tiep", period: 5, group: 12, config: "[Kr] 4d¹⁰ 5s²", state: "Rắn", electro: 1.69, radius: 161, melt: 321, boil: 767, density: "8.65 g/cm³", year: 1817, discoverer: "Friedrich Stromeyer", desc: "Kim loại độc hại. Dùng sản xuất pin Ni-Cd, chất kiểm soát phản ứng trong lò hạt nhân và phẩm màu sắc." },
+            { z: 49, sym: "In", nameVi: "Indi", nameEn: "Indium", mass: "114.82", cat: "kim-loai-yeu", period: 5, group: 13, config: "[Kr] 4d¹⁰ 5s² 5p¹", state: "Rắn", electro: 1.78, radius: 156, melt: 156.6, boil: 2072, density: "7.31 g/cm³", year: 1863, discoverer: "Ferdinand Reich, Hieronymous Theodor Richter", desc: "Kim loại rất mềm. Hợp chất ITO (Indium Tin Oxide) trong suốt dẫn điện cực kỳ quan trọng cho màn hình cảm ứng." },
+            { z: 50, sym: "Sn", nameVi: "Thiếc", nameEn: "Tin", mass: "118.71", cat: "kim-loai-yeu", period: 5, group: 14, config: "[Kr] 4d¹⁰ 5s² 5p²", state: "Rắn", electro: 1.96, radius: 145, melt: 231.9, boil: 2602, density: "7.31 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Dùng để tráng lớp chống gỉ cho vỏ hộp thực phẩm (chế tạo lon thiếc), hợp kim đồng thau và dây hàn điện tử." },
+            { z: 51, sym: "Sb", nameVi: "Antimon", nameEn: "Antimony", mass: "121.76", cat: "ban-kim", period: 5, group: 15, config: "[Kr] 4d¹⁰ 5s² 5p³", state: "Rắn", electro: 2.05, radius: 133, melt: 630.6, boil: 1587, density: "6.697 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Pha vào hợp kim chì để tăng độ cứng (dùng làm vỏ ắc quy chì-axit), hóa chất chống cháy và chất bán dẫn." },
+            { z: 52, sym: "Te", nameVi: "Telua", nameEn: "Tellurium", mass: "127.60", cat: "ban-kim", period: 5, group: 16, config: "[Kr] 4d¹⁰ 5s² 5p⁴", state: "Rắn", electro: 2.1, radius: 123, melt: 449.5, boil: 988, density: "6.24 g/cm³", year: 1782, discoverer: "Franz-Joseph Müller von Reichenstein", desc: "Bán kim hiếm dùng cải thiện khả năng gia công cơ khí của thép, chế tạo tấm pin năng lượng mặt trời CdTe." },
+            { z: 53, sym: "I", nameVi: "Iốt", nameEn: "Iodine", mass: "126.90", cat: "halozen", period: 5, group: 17, config: "[Kr] 4d¹⁰ 5s² 5p⁵", state: "Rắn", electro: 2.66, radius: 115, melt: 113.7, boil: 184.3, density: "4.933 g/cm³", year: 1811, discoverer: "Bernard Courtois", desc: "Vi chất quan trọng ngừa bệnh bướu cổ. Dùng làm dung dịch sát trùng y tế (cồn i-ốt) và chất cản quang X-quang." },
+            { z: 54, sym: "Xe", nameVi: "Xenon", nameEn: "Xenon", mass: "131.29", cat: "khi-hiem", period: 5, group: 18, config: "[Kr] 4d¹⁰ 5s² 5p⁶", state: "Khí", electro: 2.6, radius: 108, melt: -111.7, boil: -108.1, density: "5.894 g/L", year: 1898, discoverer: "William Ramsay, Morris Travers", desc: "Khí hiếm nặng. Dùng trong đèn pha ô tô cao cấp, đèn phẫu thuật y tế, gây mê và động cơ ion vệ tinh." },
+            { z: 55, sym: "Cs", nameVi: "Cesi", nameEn: "Caesium", mass: "132.91", cat: "kim-loai-kiem", period: 6, group: 1, config: "[Xe] 6s¹", state: "Rắn", electro: 0.79, radius: 298, melt: 28.5, boil: 671, density: "1.93 g/cm³", year: 1860, discoverer: "Robert Bunsen, Gustav Kirchhoff", desc: "Kim loại hoạt động mạnh nhất. Dao động nguyên tử Cs-133 là chuẩn mực định nghĩa đơn vị Giây (đo thời gian)." },
+            { z: 56, sym: "Ba", nameVi: "Bari", nameEn: "Barium", mass: "137.33", cat: "kim-loai-kiem-tho", period: 6, group: 2, config: "[Xe] 6s²", state: "Rắn", electro: 0.89, radius: 253, melt: 727, boil: 1897, density: "3.51 g/cm³", year: 1808, discoverer: "Humphry Davy", desc: "Hợp chất BaSO₄ dùng làm chất cản quang trong chụp X-quang dạ dày và phụ gia dung dịch khoan giếng dầu." },
+            { z: 57, sym: "La", nameVi: "Lantan", nameEn: "Lanthanum", mass: "138.91", cat: "lanthan", period: 6, group: 3, config: "[Xe] 5d¹ 6s²", state: "Rắn", electro: 1.1, radius: 226, melt: 920, boil: 3464, density: "6.162 g/cm³", year: 1839, discoverer: "Carl Gustaf Mosander", desc: "Đứng đầu dòng họ Lanthan. Dùng chế tạo ống kính máy ảnh chất lượng cao và pin Ni-MH xe ô tô hybrid." },
+            { z: 58, sym: "Ce", nameVi: "Ceri", nameEn: "Cerium", mass: "140.12", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹ 5d¹ 6s²", state: "Rắn", electro: 1.12, radius: 210, melt: 795, boil: 3443, density: "6.77 g/cm³", year: 1803, discoverer: "M.H. Klaproth, J.J. Berzelius", desc: "Nguyên tố đất hiếm dồi dào nhất. Dùng làm đá lửa máy quẹt, bột đánh bóng kính và chất xúc tác lọc khí thải." },
+            { z: 59, sym: "Pr", nameVi: "Praseodym", nameEn: "Praseodymium", mass: "140.91", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f³ 6s²", state: "Rắn", electro: 1.13, radius: 247, melt: 935, boil: 3520, density: "6.77 g/cm³", year: 1885, discoverer: "Carl Auer von Welsbach", desc: "Pha vào thủy tinh tạo kính bảo hộ thợ hàn (lọc ánh sáng vàng chói) và tạo màu vàng cho đồ gốm sứ." },
+            { z: 60, sym: "Nd", nameVi: "Neodym", nameEn: "Neodymium", mass: "144.24", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f⁴ 6s²", state: "Rắn", electro: 1.14, radius: 206, melt: 1024, boil: 3074, density: "7.01 g/cm³", year: 1885, discoverer: "Carl Auer von Welsbach", desc: "Thành phần tạo ra nam châm vĩnh cửu mạnh nhất thế giới (NdFeB) dùng trong tai nghe, loa, motor xe điện và tuabin gió." },
+            { z: 61, sym: "Pm", nameVi: "Prometi", nameEn: "Promethium", mass: "(145)", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f⁵ 6s²", state: "Rắn", electro: 1.13, radius: 205, melt: 1042, boil: 3000, density: "7.26 g/cm³", year: 1945, discoverer: "Jacob A. Marinsky", desc: "Nguyên tố đất hiếm phóng xạ. Dùng tạo sơn dạ quang cho đồng hồ và pin nguyên tử nhỏ gọn dùng cho tàu không gian." },
+            { z: 62, sym: "Sm", nameVi: "Samari", nameEn: "Samarium", mass: "150.36", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f⁶ 6s²", state: "Rắn", electro: 1.17, radius: 238, melt: 1072, boil: 1794, density: "7.52 g/cm³", year: 1879, discoverer: "Paul-Émile Lecoq de Boisbaudran", desc: "Chế tạo nam châm Samari-Coban chịu nhiệt độ cực cao và thanh hấp thụ nơtron trong lò phản ứng hạt nhân." },
+            { z: 63, sym: "Eu", nameVi: "Europi", nameEn: "Europium", mass: "151.96", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f⁷ 6s²", state: "Rắn", electro: 1.2, radius: 231, melt: 822, boil: 1529, density: "5.244 g/cm³", year: 1901, discoverer: "Eugène-Anatole Demarçay", desc: "Phát xạ màu đỏ tươi khi kích thích. Dùng chống giả tiền giấy Euro và tạo màu đỏ trên màn hình TV." },
+            { z: 64, sym: "Gd", nameVi: "Gadolini", nameEn: "Gadolinium", mass: "157.25", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f⁷ 5d¹ 6s²", state: "Rắn", electro: 1.2, radius: 233, melt: 1313, boil: 3273, density: "7.90 g/cm³", year: 1880, discoverer: "Jean Charles Galissard de Marignac", desc: "Có đặc tính từ tính độc đáo. Hợp chất Gadolini được tiêm làm chất tương phản trong chụp y khoa MRI." },
+            { z: 65, sym: "Tb", nameVi: "Terbi", nameEn: "Terbium", mass: "158.93", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f⁹ 6s²", state: "Rắn", electro: 1.2, radius: 225, melt: 1356, boil: 3230, density: "8.23 g/cm³", year: 1843, discoverer: "Carl Gustaf Mosander", desc: "Phát huỳnh quang màu xanh lá cây. Dùng trong đèn tiết kiệm điện, màn hình hiển thị và thiết bị sonar hải quân." },
+            { z: 66, sym: "Dy", nameVi: "Dysprosi", nameEn: "Dysprosium", mass: "162.50", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹⁰ 6s²", state: "Rắn", electro: 1.22, radius: 228, melt: 1412, boil: 2567, density: "8.55 g/cm³", year: 1886, discoverer: "Paul-Émile Lecoq de Boisbaudran", desc: "Giúp nam châm Neodym duy trì từ tính ở nhiệt độ cao. Dùng trong động cơ xe điện và đĩa lưu trữ dữ liệu." },
+            { z: 67, sym: "Ho", nameVi: "Holmi", nameEn: "Holmium", mass: "164.93", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹¹ 6s²", state: "Rắn", electro: 1.23, radius: 226, melt: 1474, boil: 2700, density: "8.80 g/cm³", year: 1878, discoverer: "Marc Delafontaine, Jacques-Louis Soret", desc: "Có mô-men từ cao nhất. Dùng chế tạo laser Holmium chuyên dụng trong phẫu thuật y khoa và nha khoa." },
+            { z: 68, sym: "Er", nameVi: "Erbi", nameEn: "Erbium", mass: "167.26", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹² 6s²", state: "Rắn", electro: 1.24, radius: 226, melt: 1529, boil: 2868, density: "9.066 g/cm³", year: 1843, discoverer: "Carl Gustaf Mosander", desc: "Khếch đại tín hiệu quang. Pha vào sợi cáp quang viễn thông giúp truyền dữ liệu Internet đi xa hàng ngàn km." },
+            { z: 69, sym: "Tm", nameVi: "Tuli", nameEn: "Thulium", mass: "168.93", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹³ 6s²", state: "Rắn", electro: 1.25, radius: 222, melt: 1545, boil: 1950, density: "9.32 g/cm³", year: 1879, discoverer: "Per Teodor Cleve", desc: "Một trong những đất hiếm hiếm nhất. Dùng làm nguồn phát tia X trong máy X-quang di động xách tay." },
+            { z: 70, sym: "Yb", nameVi: "Yterbi", nameEn: "Ytterbium", mass: "173.05", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹⁴ 6s²", state: "Rắn", electro: 1.1, radius: 222, melt: 824, boil: 1196, density: "6.90 g/cm³", year: 1878, discoverer: "Jean Charles Galissard de Marignac", desc: "Dùng làm chất gia cường thép không gỉ, cảm biến đo địa chấn giếng dầu và đồng hồ nguyên tử thế hệ mới." },
+            { z: 71, sym: "Lu", nameVi: "Luteti", nameEn: "Lutetium", mass: "174.97", cat: "lanthan", period: 6, group: 3, config: "[Xe] 4f¹⁴ 5d¹ 6s²", state: "Rắn", electro: 1.27, radius: 217, melt: 1663, boil: 3402, density: "9.841 g/cm³", year: 1907, discoverer: "Georges Urbain, Carl Auer von Welsbach", desc: "Nguyên tố đắt nhất trong họ Lanthan. Dùng làm chất xúc tác trong nhà máy lọc dầu và chụp tinh thể y tế." },
+            { z: 72, sym: "Hf", nameVi: "Hafni", nameEn: "Hafnium", mass: "178.49", cat: "kim-loai-chuyen-tiep", period: 6, group: 4, config: "[Xe] 4f¹⁴ 5d² 6s²", state: "Rắn", electro: 1.3, radius: 208, melt: 2233, boil: 4603, density: "13.31 g/cm³", year: 1923, discoverer: "Dirk Coster, George de Hevesy", desc: "Hấp thụ nơtron cực giỏi. Dùng làm thanh điều khiển trong lò phản ứng hạt nhân tàu ngầm nguyên tử." },
+            { z: 73, sym: "Ta", nameVi: "Tantan", nameEn: "Tantalum", mass: "180.95", cat: "kim-loai-chuyen-tiep", period: 6, group: 5, config: "[Xe] 4f¹⁴ 5d³ 6s²", state: "Rắn", electro: 1.5, radius: 200, melt: 3017, boil: 5458, density: "16.69 g/cm³", year: 1802, discoverer: "Anders Gustaf Ekeberg", desc: "Kháng ăn mòn sinh học hoàn hảo. Dùng sản xuất tụ điện siêu nhỏ cho smartphone và dụng cụ phẫu thuật." },
+            { z: 74, sym: "W", nameVi: "Vonfram", nameEn: "Tungsten", mass: "183.84", cat: "kim-loai-chuyen-tiep", period: 6, group: 6, config: "[Xe] 4f¹⁴ 5d⁴ 6s²", state: "Rắn", electro: 2.36, radius: 193, melt: 3422, boil: 5555, density: "19.25 g/cm³", year: 1783, discoverer: "Juan José & Fausto Elhuyar", desc: "Nhiệt độ nóng chảy cao nhất trong các kim loại (3422°C). Dùng làm dây tóc bóng đèn, mũi khoan siêu cứng." },
+            { z: 75, sym: "Re", nameVi: "Reni", nameEn: "Rhenium", mass: "186.21", cat: "kim-loai-chuyen-tiep", period: 6, group: 7, config: "[Xe] 4f¹⁴ 5d⁵ 6s²", state: "Rắn", electro: 1.9, radius: 188, melt: 3186, boil: 5596, density: "21.02 g/cm³", year: 1925, discoverer: "Masataka Ogawa / Walter Noddack", desc: "Kim loại cực hiếm. Dùng trong siêu hợp kim chịu nhiệt làm cánh quạt động cơ phản lực máy bay phản lực." },
+            { z: 76, sym: "Os", nameVi: "Osmi", nameEn: "Osmium", mass: "190.23", cat: "kim-loai-chuyen-tiep", period: 6, group: 8, config: "[Xe] 4f¹⁴ 5d⁶ 6s²", state: "Rắn", electro: 2.2, radius: 185, melt: 3033, boil: 5012, density: "22.59 g/cm³", year: 1803, discoverer: "Smithson Tennant", desc: "Chất tự nhiên có khối lượng riêng lớn nhất (nặng gấp 22.5 lần nước). Dùng làm đầu ngòi bút máy cao cấp." },
+            { z: 77, sym: "Ir", nameVi: "Iridi", nameEn: "Iridium", mass: "192.22", cat: "kim-loai-chuyen-tiep", period: 6, group: 9, config: "[Xe] 4f¹⁴ 5d⁷ 6s²", state: "Rắn", electro: 2.2, radius: 180, melt: 2446, boil: 4428, density: "22.56 g/cm³", year: 1803, discoverer: "Smithson Tennant", desc: "Kim loại chống ăn mòn tốt nhất. Dùng làm bugi đánh lửa động cơ đua, nồi nấu kim loại và thước mét chuẩn." },
+            { z: 78, sym: "Pt", nameVi: "Bạch kim (Platin)", nameEn: "Platinum", mass: "195.08", cat: "kim-loai-chuyen-tiep", period: 6, group: 10, config: "[Xe] 4f¹⁴ 5d⁹ 6s¹", state: "Rắn", electro: 2.28, radius: 177, melt: 1768.3, boil: 3825, density: "21.45 g/cm³", year: 1735, discoverer: "Antonio de Ulloa", desc: "Kim loại quý giá trơ hóa học. Dùng làm trang sức đắt tiền, bộ xúc tác khí thải xe hơi và thuốc trị ung thư." },
+            { z: 79, sym: "Au", nameVi: "Vàng", nameEn: "Gold", mass: "196.97", cat: "kim-loai-chuyen-tiep", period: 6, group: 11, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s¹", state: "Rắn", electro: 2.54, radius: 174, melt: 1064.1, boil: 2970, density: "19.30 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Kim loại quý màu vàng đặc trưng, không bao giờ bị rỉ sét. Dùng làm tiền tệ dự trữ, trang sức và linh kiện vi mạch." },
+            { z: 80, sym: "Hg", nameVi: "Thủy ngân", nameEn: "Mercury", mass: "200.59", cat: "kim-loai-chuyen-tiep", period: 6, group: 12, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s²", state: "Lỏng", electro: 2.00, radius: 171, melt: -38.83, boil: 356.7, density: "13.534 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Kim loại duy nhất ở dạng lỏng ở nhiệt độ phòng. Độc tính cao. Dùng trong nhiệt kế, áp kế và công nghiệp hóa chất." },
+            { z: 81, sym: "Tl", nameVi: "Tali", nameEn: "Thallium", mass: "204.38", cat: "kim-loai-yeu", period: 6, group: 13, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹", state: "Rắn", electro: 1.62, radius: 156, melt: 304, boil: 1473, density: "11.85 g/cm³", year: 1861, discoverer: "William Crookes", desc: "Cực kỳ độc hại (trước đây dùng làm thuốc chuột). Ngày nay dùng trong kính quang học hồng ngoại và y học." },
+            { z: 82, sym: "Pb", nameVi: "Chì", nameEn: "Lead", mass: "207.2", cat: "kim-loai-yeu", period: 6, group: 14, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²", state: "Rắn", electro: 1.87, radius: 154, melt: 327.5, boil: 1749, density: "11.34 g/cm³", year: "Cổ đại", discoverer: "Thời cổ đại", desc: "Kim loại nặng, mềm, cản tia bức xạ tia X và gamma. Dùng làm bình ắc quy xe máy/ô tô và tấm chắn bức xạ." },
+            { z: 83, sym: "Bi", nameVi: "Bismut", nameEn: "Bismuth", mass: "208.98", cat: "kim-loai-yeu", period: 6, group: 15, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³", state: "Rắn", electro: 2.02, radius: 143, melt: 271.5, boil: 1564, density: "9.78 g/cm³", year: 1753, discoverer: "Claude François Geoffroy", desc: "Kim loại nặng lành tính không độc hại. Tinh thể có màu cầu vồng tuyệt đẹp. Dùng làm thuốc dạ dày Pepto-Bismol." },
+            { z: 84, sym: "Po", nameVi: "Poloni", nameEn: "Polonium", mass: "(209)", cat: "ban-kim", period: 6, group: 16, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴", state: "Rắn", electro: 2.0, radius: 135, melt: 254, boil: 962, density: "9.196 g/cm³", year: 1898, discoverer: "Marie Curie, Pierre Curie", desc: "Nguyên tố phóng xạ cực mạnh và rất độc. Dùng loại bỏ tĩnh điện trong máy công nghiệp và nguồn nhiệt tàu vũ trụ." },
+            { z: 85, sym: "At", nameVi: "Astatin", nameEn: "Astatine", mass: "(210)", cat: "halozen", period: 6, group: 17, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵", state: "Rắn", electro: 2.2, radius: 127, melt: 302, boil: 337, density: "6.35 g/cm³", year: 1940, discoverer: "Dale R. Corson, Kenneth Ross MacKenzie", desc: "Nguyên tố tự nhiên hiếm nhất trên Trái Đất (tổng cộng ít hơn 30g). Đồng vị At-211 tiềm năng trong điều trị ung thư." },
+            { z: 86, sym: "Rn", nameVi: "Radon", nameEn: "Radon", mass: "(222)", cat: "khi-hiem", period: 6, group: 18, config: "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶", state: "Khí", electro: 2.2, radius: 120, melt: -71, boil: -61.7, density: "9.73 g/L", year: 1899, discoverer: "Ernest Rutherford, Robert Owens", desc: "Khí hiếm phóng xạ không màu không mùi phát sinh từ sự phân rã urani trong đất đá. Có trong nghiên cứu y học." },
+            { z: 87, sym: "Fr", nameVi: "Fransi", nameEn: "Francium", mass: "(223)", cat: "kim-loai-kiem", period: 7, group: 1, config: "[Rn] 7s¹", state: "Rắn", electro: 0.79, radius: 348, melt: 27, boil: 677, density: "1.87 g/cm³", year: 1939, discoverer: "Marguerite Perey", desc: "Kim loại kiềm phóng xạ cực kỳ không bền. Chỉ tồn tại lượng vết trong tự nhiên, chủ yếu dùng nghiên cứu hạt nhân." },
+            { z: 88, sym: "Ra", nameVi: "Radi", nameEn: "Radium", mass: "(226)", cat: "kim-loai-kiem-tho", period: 7, group: 2, config: "[Rn] 7s²", state: "Rắn", electro: 0.9, radius: 283, melt: 700, boil: 1737, density: "5.5 g/cm³", year: 1898, discoverer: "Marie Curie, Pierre Curie", desc: "Kim loại phóng xạ phát ra ánh sáng xanh lam nhạt. Trước đây từng dùng làm sơn dạ quang kim đồng hồ." },
+            { z: 89, sym: "Ac", nameVi: "Actini", nameEn: "Actinium", mass: "(227)", cat: "actini", period: 7, group: 3, config: "[Rn] 6d¹ 7s²", state: "Rắn", electro: 1.1, radius: 260, melt: 1050, boil: 3198, density: "10.07 g/cm³", year: 1899, discoverer: "André-Louis Debierne", desc: "Đứng đầu dòng họ Actini. Phát ra tia phóng xạ alpha/beta mạnh, được nghiên cứu ứng dụng trong xạ trị ung thư." },
+            { z: 90, sym: "Th", nameVi: "Xori", nameEn: "Thorium", mass: "232.04", cat: "actini", period: 7, group: 3, config: "[Rn] 6d² 7s²", state: "Rắn", electro: 1.3, radius: 237, melt: 1750, boil: 4788, density: "11.72 g/cm³", year: 1829, discoverer: "Jöns Jacob Berzelius", desc: "Nhiên liệu hạt nhân tiềm năng thay thế Urani trong tương lai vì dồi dào và an toàn hơn." },
+            { z: 91, sym: "Pa", nameVi: "Protactini", nameEn: "Protactinium", mass: "231.04", cat: "actini", period: 7, group: 3, config: "[Rn] 5f² 6d¹ 7s²", state: "Rắn", electro: 1.5, radius: 243, melt: 1568, boil: 4027, density: "15.37 g/cm³", year: 1913, discoverer: "Oswald Helmuth Göhring, Kasimir Fajans", desc: "Nguyên tố phóng xạ độc hại và hiếm. Chủ yếu dùng cho mục đích nghiên cứu khoa học cơ bản." },
+            { z: 92, sym: "U", nameVi: "Urani", nameEn: "Uranium", mass: "238.03", cat: "actini", period: 7, group: 3, config: "[Rn] 5f³ 6d¹ 7s²", state: "Rắn", electro: 1.38, radius: 240, melt: 1135, boil: 4131, density: "19.1 g/cm³", year: 1789, discoverer: "Martin Heinrich Klaproth", desc: "Nhiên liệu chính cho các nhà máy điện hạt nhân (U-235) sản xuất năng lượng và chế tạo vũ khí hạt nhân." },
+            { z: 93, sym: "Np", nameVi: "Neptuni", nameEn: "Neptunium", mass: "(237)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f⁴ 6d¹ 7s²", state: "Rắn", electro: 1.36, radius: 221, melt: 644, boil: 3902, density: "20.45 g/cm³", year: 1940, discoverer: "Edwin McMillan, Philip H. Abelson", desc: "Nguyên tố siêu urani đầu tiên được tổng hợp. Dùng trong các thiết bị phát hiện nơtron hạt nhân." },
+            { z: 94, sym: "Pu", nameVi: "Plutoni", nameEn: "Plutonium", mass: "(244)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f⁶ 7s²", state: "Rắn", electro: 1.28, radius: 243, melt: 640, boil: 3228, density: "19.85 g/cm³", year: 1940, discoverer: "Glenn T. Seaborg et al.", desc: "Nguyên tố phóng xạ dùng làm nhiên liệu lò phản ứng hạt nhân và nguồn năng lượng cho các tàu không gian thăm dò." },
+            { z: 95, sym: "Am", nameVi: "Americi", nameEn: "Americium", mass: "(243)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f⁷ 7s²", state: "Rắn", electro: 1.13, radius: 244, melt: 1176, boil: 2607, density: "13.67 g/cm³", year: 1944, discoverer: "Glenn T. Seaborg et al.", desc: "Đồng vị Am-241 được sử dụng phổ biến trong các thiết bị báo khói ion hóa gia đình." },
+            { z: 96, sym: "Cm", nameVi: "Curi", nameEn: "Curium", mass: "(247)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f⁷ 6d¹ 7s²", state: "Rắn", electro: 1.28, radius: 245, melt: 1345, boil: 3110, density: "13.51 g/cm³", year: 1944, discoverer: "Glenn T. Seaborg et al.", desc: "Đặt tên theo ông bà Curie. Dùng làm nguồn năng lượng alpha trong máy phân tích X-quang trên các xe tự hành Sao Hỏa." },
+            { z: 97, sym: "Bk", nameVi: "Berkeli", nameEn: "Berkelium", mass: "(247)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f⁹ 7s²", state: "Rắn", electro: 1.3, radius: 244, melt: 986, boil: 2627, density: "14.78 g/cm³", year: 1949, discoverer: "Lawrence Berkeley National Lab", desc: "Nguyên tố nhân tạo tổng hợp lượng cực nhỏ, chủ yếu dùng tổng hợp các nguyên tố siêu nặng như Tennessine." },
+            { z: 98, sym: "Cf", nameVi: "Californi", nameEn: "Californium", mass: "(251)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f¹⁰ 7s²", state: "Rắn", electro: 1.3, radius: 245, melt: 900, boil: 1470, density: "15.1 g/cm³", year: 1950, discoverer: "Lawrence Berkeley National Lab", desc: "Nguồn phát nơtron cực mạnh. Dùng để khởi động lò phản ứng hạt nhân, dò tìm mạch nước và quặng mỏ." },
+            { z: 99, sym: "Es", nameVi: "Ensteini", nameEn: "Einsteinium", mass: "(252)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f¹¹ 7s²", state: "Rắn", electro: 1.3, radius: 245, melt: 860, boil: 996, density: "8.84 g/cm³", year: 1952, discoverer: "Lawrence Berkeley National Lab", desc: "Đặt theo tên nhà bác học Albert Einstein. Được phát hiện trong tàn dư của cuộc thử nghiệm bom nhiệt hạch IVY MIKE." },
+            { z: 100, sym: "Fm", nameVi: "Phecmi", nameEn: "Fermium", mass: "(257)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f¹² 7s²", state: "Rắn", electro: 1.3, radius: 245, melt: 1527, boil: null, density: "không xác định", year: 1952, discoverer: "Lawrence Berkeley National Lab", desc: "Đặt tên theo nhà vật lý Enrico Fermi. Là nguyên tố nặng nhất có thể tạo ra bằng sự bắn phá nơtron." },
+            { z: 101, sym: "Md", nameVi: "Mendelevi", nameEn: "Mendelevium", mass: "(258)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f¹³ 7s²", state: "Rắn", electro: 1.3, radius: 246, melt: 827, boil: null, density: "không xác định", year: 1955, discoverer: "Lawrence Berkeley National Lab", desc: "Đặt tên vinh danh Dmitri Mendeleev - cha đẻ của Bảng tuần hoàn các nguyên tố hóa học." },
+            { z: 102, sym: "No", nameVi: "Nobeli", nameEn: "Nobelium", mass: "(259)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f¹⁴ 7s²", state: "Rắn", electro: 1.3, radius: 246, melt: 827, boil: null, density: "không xác định", year: 1966, discoverer: "Joint Institute for Nuclear Research", desc: "Đặt tên theo Alfred Nobel - nhà khoa học phát minh ra thuốc nổ và sáng lập giải thưởng Nobel." },
+            { z: 103, sym: "Lr", nameVi: "Laurenci", nameEn: "Lawrencium", mass: "(266)", cat: "actini", period: 7, group: 3, config: "[Rn] 5f¹⁴ 6d¹ 7s²", state: "Rắn", electro: 1.3, radius: 247, melt: 1627, boil: null, density: "không xác định", year: 1961, discoverer: "Lawrence Berkeley National Lab", desc: "Nguyên tố cuối cùng của họ Actini. Đặt tên theo Ernest Lawrence, người phát minh máy gia tốc hạt Xyclotron." },
+            { z: 104, sym: "Rf", nameVi: "Rơteri", nameEn: "Rutherfordium", mass: "(267)", cat: "kim-loai-chuyen-tiep", period: 7, group: 4, config: "[Rn] 5f¹⁴ 6d² 7s²", state: "Rắn", electro: null, radius: null, melt: 2100, boil: 5500, density: "23.2 g/cm³", year: 1969, discoverer: "JINR (Nga) / LBNL (Mỹ)", desc: "Nguyên tố nhân tạo phóng xạ siêu nặng đầu tiên của chu kỳ 7. Đặt tên theo Ernest Rutherford." },
+            { z: 105, sym: "Db", nameVi: "Dubni", nameEn: "Dubnium", mass: "(268)", cat: "kim-loai-chuyen-tiep", period: 7, group: 5, config: "[Rn] 5f¹⁴ 6d³ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "29.3 g/cm³", year: 1970, discoverer: "JINR (Nga) / LBNL (Mỹ)", desc: "Nguyên tố phóng xạ tổng hợp nhân tạo. Đặt tên theo trung tâm nghiên cứu hạt nhân Dubna tại Nga." },
+            { z: 106, sym: "Sg", nameVi: "Seaborgi", nameEn: "Seaborgium", mass: "(269)", cat: "kim-loai-chuyen-tiep", period: 7, group: 6, config: "[Rn] 5f¹⁴ 6d⁴ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "35.0 g/cm³", year: 1974, discoverer: "Lawrence Berkeley National Lab", desc: "Đặt tên vinh danh Glenn T. Seaborg, nhà khoa học có công khám phá ra nhiều nguyên tố siêu urani." },
+            { z: 107, sym: "Bh", nameVi: "Bohri", nameEn: "Bohrium", mass: "(270)", cat: "kim-loai-chuyen-tiep", period: 7, group: 7, config: "[Rn] 5f¹⁴ 6d⁵ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "37.1 g/cm³", year: 1981, discoverer: "GSI Helmholtzzentrum (Đức)", desc: "Nguyên tố nhân tạo tổng hợp. Đặt tên theo Niels Bohr - nhà vật lý tiên phong về cấu trúc nguyên tử." },
+            { z: 108, sym: "Hs", nameVi: "Hassi", nameEn: "Hassium", mass: "(269)", cat: "kim-loai-chuyen-tiep", period: 7, group: 8, config: "[Rn] 5f¹⁴ 6d⁶ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "40.7 g/cm³", year: 1984, discoverer: "GSI Helmholtzzentrum (Đức)", desc: "Đặt tên theo bang Hesse (Hassia trong tiếng Latinh) của Đức, nơi đặt phòng thí nghiệm tổng hợp ra nó." },
+            { z: 109, sym: "Mt", nameVi: "Maitneri", nameEn: "Meitnerium", mass: "(278)", cat: "kim-loai-chuyen-tiep", period: 7, group: 9, config: "[Rn] 5f¹⁴ 6d⁷ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "37.4 g/cm³", year: 1982, discoverer: "GSI Helmholtzzentrum (Đức)", desc: "Đặt tên vinh danh Lise Meitner, nhà nữ vật lý học tiên phong trong việc phát hiện ra phản ứng phân hạch hạt nhân." },
+            { z: 110, sym: "Ds", nameVi: "Darmstati", nameEn: "Darmstadtium", mass: "(281)", cat: "kim-loai-chuyen-tiep", period: 7, group: 10, config: "[Rn] 5f¹⁴ 6d⁸ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "34.8 g/cm³", year: 1994, discoverer: "GSI Helmholtzzentrum (Đức)", desc: "Đặt tên theo thành phố Darmstadt (Đức), nơi nguyên tố này lần đầu tiên được tạo ra." },
+            { z: 111, sym: "Rg", nameVi: "Rơngen", nameEn: "Roentgenium", mass: "(282)", cat: "kim-loai-chuyen-tiep", period: 7, group: 11, config: "[Rn] 5f¹⁴ 6d⁹ 7s²", state: "Rắn", electro: null, radius: null, melt: null, boil: null, density: "28.7 g/cm³", year: 1994, discoverer: "GSI Helmholtzzentrum (Đức)", desc: "Đặt tên vinh danh Wilhelm Conrad Röntgen, nhà vật lý phát minh ra tia X (Röntgen)." },
+            { z: 112, sym: "Cn", nameVi: "Copenici", nameEn: "Copernicium", mass: "(285)", cat: "kim-loai-chuyen-tiep", period: 7, group: 12, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s²", state: "Khí", electro: null, radius: null, melt: null, boil: 67, density: "14.0 g/cm³", year: 1996, discoverer: "GSI Helmholtzzentrum (Đức)", desc: "Đặt tên vinh danh Nicolaus Copernicus, nhà thiên văn học đưa ra thuyết nhật tâm." },
+            { z: 113, sym: "Nh", nameVi: "Nihoni", nameEn: "Nihonium", mass: "(286)", cat: "kim-loai-yeu", period: 7, group: 13, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹", state: "Rắn", electro: null, radius: null, melt: 430, boil: 1130, density: "16 g/cm³", year: 2004, discoverer: "RIKEN (Nhật Bản)", desc: "Nguyên tố hóa học đầu tiên được phát hiện tại Châu Á (Nihon nghĩa là Nhật Bản)." },
+            { z: 114, sym: "Fl", nameVi: "Flerovi", nameEn: "Flerovium", mass: "(289)", cat: "kim-loai-yeu", period: 7, group: 14, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²", state: "Khí", electro: null, radius: null, melt: 67, boil: -60, density: "14 g/cm³", year: 1998, discoverer: "JINR (Nga)", desc: "Đặt tên vinh danh Phòng thí nghiệm phản ứng hạt nhân Flerov tại Dubna (Nga)." },
+            { z: 115, sym: "Mc", nameVi: "Moscovi", nameEn: "Moscovium", mass: "(290)", cat: "kim-loai-yeu", period: 7, group: 15, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³", state: "Rắn", electro: null, radius: null, melt: 400, boil: 1100, density: "13.5 g/cm³", year: 2003, discoverer: "JINR (Nga) / LLNL (Mỹ)", desc: "Đặt tên theo tỉnh Moscow (Nga), nơi đặt Viện nghiên cứu hạt nhân liên hợp Dubna." },
+            { z: 116, sym: "Lv", nameVi: "Livermori", nameEn: "Livermorium", mass: "(293)", cat: "kim-loai-yeu", period: 7, group: 16, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴", state: "Rắn", electro: null, radius: null, melt: 435, boil: 820, density: "12.9 g/cm³", year: 2000, discoverer: "JINR (Nga) / LLNL (Mỹ)", desc: "Đặt tên vinh danh Phòng thí nghiệm Quốc gia Lawrence Livermore tại thành phố Livermore, California." },
+            { z: 117, sym: "Ts", nameVi: "Tennessine", nameEn: "Tennessine", mass: "(294)", cat: "halozen", period: 7, group: 17, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵", state: "Rắn", electro: null, radius: null, melt: 450, boil: 610, density: "7.2 g/cm³", year: 2010, discoverer: "JINR (Nga) / ORNL (Mỹ)", desc: "Đặt tên theo tiểu bang Tennessee (Mỹ), nơi có Phòng thí nghiệm Oak Ridge và Đại học Vanderbilt." },
+            { z: 118, sym: "Og", nameVi: "Oganesson", nameEn: "Oganesson", mass: "(294)", cat: "khi-hiem", period: 7, group: 18, config: "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶", state: "Khí", electro: null, radius: null, melt: 50, boil: 80, density: "5.0 g/cm³", year: 2002, discoverer: "JINR (Nga) / LLNL (Mỹ)", desc: "Nguyên tố có số hiệu nguyên tử lớn nhất hiện tại (Z=118). Đặt tên vinh danh nhà vật lý Yuri Oganessian." }
+        ];
+
+        // Solubility Data Matrix
+        const solubilityData = {
+            cations: [
+                { symbol: "H⁺", name: "Hydro" },
+                { symbol: "Li⁺", name: "Liti" },
+                { symbol: "Na⁺", name: "Natri" },
+                { symbol: "K⁺", name: "Kali" },
+                { symbol: "NH₄⁺", name: "Amoni" },
+                { symbol: "Mg²⁺", name: "Magie" },
+                { symbol: "Ca²⁺", name: "Canxi" },
+                { symbol: "Ba²⁺", name: "Bari" },
+                { symbol: "Al³⁺", name: "Nhôm" },
+                { symbol: "Fe²⁺", name: "Sắt (II)" },
+                { symbol: "Fe³⁺", name: "Sắt (III)" },
+                { symbol: "Cu²⁺", name: "Đồng (II)" },
+                { symbol: "Zn²⁺", name: "Kẽm" },
+                { symbol: "Pb²⁺", name: "Chì (II)" },
+                { symbol: "Ag⁺", name: "Bạc" }
+            ],
+            anions: [
+                { symbol: "OH⁻", name: "Hydroxid" },
+                { symbol: "Cl⁻", name: "Clorua" },
+                { symbol: "Br⁻", name: "Bromua" },
+                { symbol: "I⁻", name: "Iotua" },
+                { symbol: "NO₃⁻", name: "Nitrat" },
+                { symbol: "SO₄²⁻", name: "Sulfat" },
+                { symbol: "CO₃²⁻", name: "Cacbonat" },
+                { symbol: "SO₃²⁻", name: "Sulfit" },
+                { symbol: "PO₄³⁻", name: "Phosphat" },
+                { symbol: "S²⁻", name: "Sulfua" },
+                { symbol: "CH₃COO⁻", name: "Axetat" },
+                { symbol: "SiO₃²⁻", name: "Silicat" }
+            ],
+            // Matrix [CationIndex][AnionIndex] -> T: Tan, K: Không tan, Í: Ít tan, Ph: Phân hủy
+            matrix: [
+                // OH-  Cl-   Br-   I-   NO3-  SO42- CO32- SO32- PO43- S2-  CH3COO- SiO32-
+                ["T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",     "K"],  // H+ (Acid)
+                ["T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",     "T"],  // Li+
+                ["T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",     "T"],  // Na+
+                ["T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",     "T"],  // K+
+                ["T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",  "T",     "T"],  // NH4+
+                ["K",  "T",  "T",  "T",  "T",  "T",  "K",  "K",  "K",  "Ph", "T",     "K"],  // Mg2+
+                ["Í",  "T",  "T",  "T",  "T",  "Í",  "K",  "K",  "K",  "Ph", "T",     "K"],  // Ca2+
+                ["T",  "T",  "T",  "T",  "T",  "K",  "K",  "K",  "K",  "T",  "T",     "K"],  // Ba2+
+                ["K",  "T",  "T",  "T",  "T",  "T",  "Ph", "Ph", "K",  "Ph", "T",     "K"],  // Al3+
+                ["K",  "T",  "T",  "T",  "T",  "T",  "K",  "K",  "K",  "K",  "T",     "K"],  // Fe2+
+                ["K",  "T",  "T",  "Ph", "T",  "T",  "Ph", "Ph", "K",  "Ph", "T",     "K"],  // Fe3+
+                ["K",  "T",  "T",  "Ph", "T",  "T",  "Ph", "K",  "K",  "K",  "T",     "K"],  // Cu2+
+                ["K",  "T",  "T",  "T",  "T",  "T",  "K",  "K",  "K",  "K",  "T",     "K"],  // Zn2+
+                ["K",  "Í",  "Í",  "K",  "T",  "K",  "K",  "K",  "K",  "K",  "T",     "K"],  // Pb2+
+                ["Ph", "K",  "K",  "K",  "T",  "Í",  "K",  "K",  "K",  "K",  "T",     "K"]   // Ag+
+            ]
+        };
+
+        // Common Acid Radicals Database
+        const acidRadicalsData = [
+            { formula: "Cl⁻", name: "Clorua", valency: "I", acidFormula: "HCl", acidName: "Axit clohidric", strength: "Mạnh", desc: "Đa số các muối Clorua đều tan tốt trong nước, ngoại trừ AgCl (tủa trắng) và PbCl₂ (ít tan trong nước lạnh, tan trong nước nóng)." },
+            { formula: "NO₃⁻", name: "Nitrat", valency: "I", acidFormula: "HNO₃", acidName: "Axit nitric", strength: "Mạnh", desc: "Tất cả các muối Nitrat đều tan rất tốt trong nước và có tính oxy hóa mạnh ở nhiệt độ cao." },
+            { formula: "SO₄²⁻", name: "Sulfat", valency: "II", acidFormula: "H₂SO₄", acidName: "Axit sunfuric", strength: "Mạnh", desc: "Hầu hết các muối Sulfat đều tan; trừ BaSO₄, PbSO₄ (tủa trắng không tan trong axit) và CaSO₄, Ag₂SO₄ (ít tan)." },
+            { formula: "CO₃²⁻", name: "Cacbonat", valency: "II", acidFormula: "H₂CO₃", acidName: "Axit cacbonic", strength: "Yếu / Không bền", desc: "Chỉ có muối cacbonat của Na⁺, K⁺, NH₄⁺ là tan. Các muối còn lại không tan nhưng dễ bị phân hủy bởi axit mạnh giải phóng khí CO₂." },
+            { formula: "SO₃²⁻", name: "Sulfit", valency: "II", acidFormula: "H₂SO₃", acidName: "Axit sunfurơ", strength: "Yếu", desc: "Tương tự cacbonat, chỉ muối của kim loại kiềm và amoni tan. Phản ứng với axit mạnh sinh ra khí SO₂ có mùi hắc." },
+            { formula: "PO₄³⁻", name: "Phosphat", valency: "III", acidFormula: "H₃PO₄", acidName: "Axit photphoric", strength: "Trung bình", desc: "Đa số muối photphat trung hòa không tan trong nước (trừ Na⁺, K⁺, NH₄⁺). Ag₃PO₄ có kết tủa màu vàng tươi đặc trưng." },
+            { formula: "S²⁻", name: "Sulfua", valency: "II", acidFormula: "H₂S", acidName: "Axit sunfuhidric", strength: "Yếu", desc: "Chỉ muối sulfua của nhóm IA, IIA tan. Nhiều muối sulfua có màu kết tủa đặc trưng như CuS, PbS, Ag₂S (đen), ZnS (trắng), CdS (vàng)." },
+            { formula: "CH₃COO⁻", name: "Axetat", valency: "I", acidFormula: "CH₃COOH", acidName: "Axit axetic", strength: "Yếu", desc: "Gốc axit hữu cơ phổ biến (có trong giấm ăn). Hầu hết tất cả các muối Axetat đều tan tốt trong nước." },
+            { formula: "SiO₃²⁻", name: "Silicat", valency: "II", acidFormula: "H₂SiO₃", acidName: "Axit silicic", strength: "Rất yếu", desc: "Axit H₂SiO₃ không tan trong nước (dạng keo trắng). Chỉ muối silicat của Na⁺ và K⁺ tan (gọi là thủy tinh lỏng)." },
+            { formula: "Br⁻", name: "Bromua", valency: "I", acidFormula: "HBr", acidName: "Axit bromhidric", strength: "Mạnh", desc: "Tính chất tương tự clorua. Hầu hết tan tốt, trừ AgBr (kết tủa màu vàng nhạt, nhạy cảm với ánh sáng) và PbBr₂ (ít tan)." },
+            { formula: "I⁻", name: "Iotua", valency: "I", acidFormula: "HI", acidName: "Axit iot-hidric", strength: "Cực mạnh", desc: "Tính chất tương tự clorua và bromua. Đa số tan, trừ AgI (kết tủa màu vàng đậm không tan trong amoniac) và PbI₂ (vàng tươi)." },
+            { formula: "F⁻", name: "Florua", valency: "I", acidFormula: "HF", acidName: "Axit florhidric", strength: "Yếu", desc: "Khác với các halogen khác, CaF₂ không tan. Axit HF có khả năng ăn mòn thủy tinh (SiO₂) nên được dùng để khắc chữ lên kính." },
+            { formula: "MnO₄⁻", name: "Permanganat", valency: "I", acidFormula: "HMnO₄", acidName: "Axit permanganic", strength: "Mạnh", desc: "Tất cả các muối Permanganat đều tan trong nước tạo dung dịch màu tím đặc trưng (ví dụ: Thuốc tím KMnO₄ có tính oxy hóa cực mạnh)." }
+        ];
+
+        // Category Dictionary for Display
+        const categoryLabels = {
+            "phi-kim": "Phi kim",
+            "khi-hiem": "Khí hiếm",
+            "kim-loai-kiem": "Kim loại kiềm",
+            "kim-loai-kiem-tho": "Kim loại kiềm thổ",
+            "ban-kim": "Bán kim",
+            "halozen": "Halogen",
+            "kim-loai-chuyen-tiep": "Kim loại chuyển tiếp",
+            "kim-loai-yeu": "Kim loại yếu",
+            "lanthan": "Họ Lanthan",
+            "actini": "Họ Actini"
+        };
+
+        // Render Periodic Table UI
+        function renderTable() {
+            const grid = document.getElementById('periodicGrid');
+            const fGrid = document.getElementById('fBlockGrid');
+            grid.innerHTML = '';
+            fGrid.innerHTML = '';
+
+            // Map elements by Period & Group for Main 18-column Table
+            const mainGridSlots = Array(7).fill(null).map(() => Array(18).fill(null));
+
+            // Populate slots
+            elementsData.forEach(el => {
+                if (el.z >= 57 && el.z <= 71) return; // Lanthanides in f-block
+                if (el.z >= 89 && el.z <= 103) return; // Actinides in f-block
+
+                const r = el.period - 1;
+                const c = el.group - 1;
+                mainGridSlots[r][c] = el;
+            });
+
+            // Handle special placeholder slots for Lanthanides/Actinides in main grid
+            mainGridSlots[5][2] = { placeholder: true, label: "57-71", name: "Họ Lanthan", cat: "lanthan" };
+            mainGridSlots[6][2] = { placeholder: true, label: "89-103", name: "Họ Actini", cat: "actini" };
+
+            // Render Main Grid (Periods 1-7)
+            for (let r = 0; r < 7; r++) {
+                for (let c = 0; c < 18; c++) {
+                    const item = mainGridSlots[r][c];
+                    if (item) {
+                        if (item.placeholder) {
+                            grid.appendChild(createPlaceholderCard(item));
+                        } else {
+                            grid.appendChild(createElementCard(item));
+                        }
+                    } else {
+                        grid.appendChild(createEmptySlot());
+                    }
+                }
+            }
+
+            // Render f-Block (Lanthanides 57-71 and Actinides 89-103)
+            // Render 2 empty lead slots to align under group 3
+            for (let i = 0; i < 2; i++) fGrid.appendChild(createEmptySlot());
+            elementsData.filter(e => e.z >= 57 && e.z <= 71).forEach(el => fGrid.appendChild(createElementCard(el)));
+            for (let i = 0; i < 1; i++) fGrid.appendChild(createEmptySlot()); // fill row if needed
+
+            for (let i = 0; i < 2; i++) fGrid.appendChild(createEmptySlot());
+            elementsData.filter(e => e.z >= 89 && e.z <= 103).forEach(el => fGrid.appendChild(createElementCard(el)));
+            for (let i = 0; i < 1; i++) fGrid.appendChild(createEmptySlot());
+        }
+
+        // Create HTML Card for Element
+        function createElementCard(el) {
+            const card = document.createElement('div');
+            card.className = `element-card cat-${el.cat} p-1 rounded-md border flex flex-col justify-between cursor-pointer select-none relative aspect-square text-center`;
+            card.dataset.z = el.z;
+            card.dataset.cat = el.cat;
+            card.dataset.nameVi = el.nameVi.toLowerCase();
+            card.dataset.nameEn = el.nameEn.toLowerCase();
+            card.dataset.sym = el.sym.toLowerCase();
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center text-[10px] leading-none opacity-80">
+                    <span class="font-semibold">${el.z}</span>
+                    <span class="hidden md:inline text-[8px] opacity-70">${el.mass}</span>
+                </div>
+                <div class="font-bold text-sm sm:text-base md:text-lg leading-tight my-auto">${el.sym}</div>
+                <div class="text-[9px] truncate font-medium opacity-90 leading-none">${el.nameVi}</div>
+            `;
+
+            card.addEventListener('click', () => openModal(el));
+            return card;
+        }
+
+        // Placeholder for Lanthanide/Actinide slots in Group 3
+        function createPlaceholderCard(item) {
+            const card = document.createElement('div');
+            card.className = `cat-${item.cat} p-1 rounded-md border border-dashed flex flex-col justify-center items-center select-none aspect-square text-center opacity-80`;
+            card.innerHTML = `
+                <span class="text-[10px] font-bold">${item.label}</span>
+                <span class="text-[9px] leading-tight mt-0.5">${item.name}</span>
+            `;
+            return card;
+        }
+
+        // Empty grid cell for spacing
+        function createEmptySlot() {
+            const div = document.createElement('div');
+            div.className = 'w-full aspect-square pointer-events-none';
+            return div;
+        }
+
+        // Search & Filter Controller
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const activeCategoryBtn = document.querySelector('.cat-btn.active');
+            const selectedCat = activeCategoryBtn ? activeCategoryBtn.dataset.cat : 'all';
+
+            const cards = document.querySelectorAll('.element-card');
+
+            cards.forEach(card => {
+                const z = card.dataset.z;
+                const sym = card.dataset.sym;
+                const nameVi = card.dataset.nameVi;
+                const nameEn = card.dataset.nameEn;
+                const cat = card.dataset.cat;
+
+                const matchesSearch = !query || z === query || sym.includes(query) || nameVi.includes(query) || nameEn.includes(query);
+                const matchesCategory = selectedCat === 'all' || cat === selectedCat;
+
+                if (matchesSearch && matchesCategory) {
+                    card.classList.remove('dimmed');
+                    if (query) {
+                        card.classList.add('highlighted');
+                    } else {
+                        card.classList.remove('highlighted');
+                    }
+                } else {
+                    card.classList.add('dimmed');
+                    card.classList.remove('highlighted');
+                }
+            });
+        }
+
+        // Event Listeners for Filters
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.cat-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-sm');
+                });
+                btn.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-sm');
+                applyFilters();
+            });
+        });
+
+        document.getElementById('resetFilterBtn').addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-sm');
+            });
+            document.querySelector('.cat-btn[data-cat="all"]').classList.add('active', 'bg-blue-600', 'text-white', 'shadow-sm');
+            applyFilters();
+        });
+
+        // Modal Display logic
+        const modal = document.getElementById('elementModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        function openModal(el) {
+            document.getElementById('modalAtomicNum').textContent = `Z = ${el.z}`;
+            document.getElementById('modalSymbol').textContent = el.sym;
+            document.getElementById('modalMass').textContent = `${el.mass} u`;
+
+            const bigSymbolBox = document.getElementById('modalBigSymbol');
+            bigSymbolBox.className = `w-24 h-24 rounded-xl border-2 flex flex-col items-center justify-center font-bold shadow-lg cat-${el.cat}`;
+
+            const badge = document.getElementById('modalCategoryBadge');
+            badge.textContent = categoryLabels[el.cat] || el.cat;
+            badge.className = `inline-block px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-2 border cat-${el.cat}`;
+
+            document.getElementById('modalNameVi').textContent = el.nameVi;
+            document.getElementById('modalNameEn').textContent = el.nameEn;
+
+            document.getElementById('modalPeriodGroup').textContent = `Chu kỳ ${el.period} - Nhóm ${el.group}`;
+            document.getElementById('modalState').textContent = el.state;
+            document.getElementById('modalElectronegativity').textContent = el.electro !== null ? el.electro : 'N/A';
+            document.getElementById('modalRadius').textContent = el.radius !== null ? `${el.radius} pm` : 'N/A';
+
+            document.getElementById('modalElectronConfig').textContent = el.config;
+            document.getElementById('modalMelting').textContent = el.melt !== null ? `${el.melt} °C` : 'N/A';
+            document.getElementById('modalBoiling').textContent = el.boil !== null ? `${el.boil} °C` : 'N/A';
+            document.getElementById('modalDensity').textContent = el.density || 'N/A';
+
+            document.getElementById('modalDiscoveredYear').textContent = el.year;
+            document.getElementById('modalDiscoveredBy').textContent = el.discoverer;
+            document.getElementById('modalDescription').textContent = el.desc;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        // Initialize on page load
+        window.onload = function() {
+            renderTable();
+            initTabs();
+            renderSolubilityTable();
+            renderAcidRadicals();
+        };
+
+        // Navigation Tab Switching Controller
+        function initTabs() {
+            const tabs = [
+                { btn: document.getElementById('tabPTable'), view: document.getElementById('viewPTable'), tools: document.getElementById('ptableTools') },
+                { btn: document.getElementById('tabSolubility'), view: document.getElementById('viewSolubility'), tools: null },
+                { btn: document.getElementById('tabAcids'), view: document.getElementById('viewAcids'), tools: null }
+            ];
+
+            tabs.forEach(tab => {
+                tab.btn.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.btn.classList.remove('active');
+                        t.view.classList.add('hidden');
+                    });
+                    tab.btn.classList.add('active');
+                    tab.view.classList.remove('hidden');
+
+                    if (tab.tools) {
+                        tab.tools.classList.remove('hidden');
+                    } else {
+                        document.getElementById('ptableTools').classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        // Render Solubility Table Matrix
+        function renderSolubilityTable() {
+            const table = document.getElementById('solubilityMatrixTable');
+            const cationSelect = document.getElementById('solubilityCationSelect');
+            const anionSelect = document.getElementById('solubilityAnionSelect');
+
+            // Populate Dropdown Selects
+            solubilityData.cations.forEach((cat, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${cat.symbol} (${cat.name})`;
+                cationSelect.appendChild(opt);
+            });
+
+            solubilityData.anions.forEach((an, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${an.symbol} (${an.name})`;
+                anionSelect.appendChild(opt);
+            });
+
+            // Render Function
+            function updateMatrixUI() {
+                const selectedCatIdx = cationSelect.value;
+                const selectedAnIdx = anionSelect.value;
+                const quickResult = document.getElementById('solubilityQuickResult');
+
+                let html = '<thead><tr class="bg-slate-800 text-slate-300 border-b border-slate-700">';
+                html += '<th class="p-2.5 text-left border-r border-slate-700 font-bold sticky left-0 bg-slate-800 z-10">Anion \\ Cation</th>';
+
+                // Cation Headers
+                solubilityData.cations.forEach((cat, cIdx) => {
+                    const isHighlight = selectedCatIdx !== 'all' && parseInt(selectedCatIdx) === cIdx;
+                    html += `<th class="p-2 min-w-[50px] border-r border-slate-700/60 ${isHighlight ? 'bg-blue-900/60 text-blue-200 font-bold' : ''}">${cat.symbol}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+
+                // Anion Rows
+                solubilityData.anions.forEach((anion, aIdx) => {
+                    const isAnionHighlight = selectedAnIdx !== 'all' && parseInt(selectedAnIdx) === aIdx;
+                    html += `<tr class="border-b border-slate-800/80 hover:bg-slate-800/40 transition-colors">`;
+                    html += `<td class="p-2 text-left font-semibold text-slate-300 border-r border-slate-700 sticky left-0 bg-slate-900 z-10 ${isAnionHighlight ? 'bg-blue-900/60 text-blue-200' : ''}">${anion.symbol} <span class="text-[10px] text-slate-400 font-normal">(${anion.name})</span></td>`;
+
+                    solubilityData.cations.forEach((cation, cIdx) => {
+                        const status = solubilityData.matrix[cIdx][aIdx];
+                        const isSelected = (selectedCatIdx !== 'all' && parseInt(selectedCatIdx) === cIdx) && (selectedAnIdx !== 'all' && parseInt(selectedAnIdx) === aIdx);
+
+                        let statusClass = "bg-slate-800/20 text-slate-500";
+                        if (status === 'T') statusClass = "bg-emerald-500/15 text-emerald-400 font-bold";
+                        else if (status === 'K') statusClass = "bg-rose-500/15 text-rose-400 font-bold";
+                        else if (status === 'Í') statusClass = "bg-amber-500/15 text-amber-400 font-bold";
+                        else if (status === 'Ph') statusClass = "bg-slate-800/80 text-slate-500 italic";
+
+                        const highlightCell = isSelected ? 'ring-2 ring-blue-400 scale-105 z-20' : '';
+
+                        html += `<td class="p-2 border-r border-slate-800 ${statusClass} ${highlightCell}" title="${cation.name} + ${anion.name}">${status}</td>`;
+                    });
+                    html += '</tr>';
+                });
+
+                html += '</tbody>';
+                table.innerHTML = html;
+
+                // Update Quick Info Text
+                if (selectedCatIdx !== 'all' && selectedAnIdx !== 'all') {
+                    const c = solubilityData.cations[selectedCatIdx];
+                    const a = solubilityData.anions[selectedAnIdx];
+                    const res = solubilityData.matrix[selectedCatIdx][selectedAnIdx];
+                    let textRes = "Tan tốt trong nước";
+                    if (res === 'K') textRes = "Không tan (Kết tủa)";
+                    else if (res === 'Í') textRes = "Ít tan";
+                    else if (res === 'Ph') textRes = "Phân hủy / Không tồn tại";
+
+                    quickResult.textContent = `Kết quả: ${c.symbol} + ${a.symbol} ➔ ${res} (${textRes})`;
+                    quickResult.classList.remove('hidden');
+                } else {
+                    quickResult.classList.add('hidden');
+                }
+            }
+
+            cationSelect.addEventListener('change', updateMatrixUI);
+            anionSelect.addEventListener('change', updateMatrixUI);
+
+            updateMatrixUI();
+        }
+
+        // Render Acid Radicals Grid Cards
+        function renderAcidRadicals() {
+            const container = document.getElementById('acidRadicalsGrid');
+            container.innerHTML = '';
+
+            acidRadicalsData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-800/50 border border-slate-800 rounded-xl p-4 hover:border-slate-700 transition-all flex flex-col justify-between";
+
+                let strengthBadge = "bg-emerald-500/20 text-emerald-400 border-emerald-500/40";
+                if (item.strength.includes("Yếu") || item.strength.includes("Không bền")) {
+                    strengthBadge = "bg-amber-500/20 text-amber-400 border-amber-500/40";
+                } else if (item.strength.includes("Mạnh")) {
+                    strengthBadge = "bg-rose-500/20 text-rose-400 border-rose-500/40";
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl font-black text-teal-300 font-mono bg-teal-950/60 px-3 py-1.5 rounded-lg border border-teal-800/50">${item.formula}</span>
+                                <div>
+                                    <h4 class="text-base font-bold text-white">${item.name}</h4>
+                                    <span class="text-xs text-slate-400">Hóa trị: <strong class="text-slate-200">${item.valency}</strong></span>
+                                </div>
+                            </div>
+                            <span class="text-[10px] uppercase font-semibold px-2 py-1 rounded border ${strengthBadge}">${item.strength}</span>
+                        </div>
+
+                        <div class="space-y-1.5 text-xs text-slate-300 bg-slate-900/60 p-3 rounded-lg border border-slate-800 mb-3">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Axit tương ứng:</span>
+                                <span class="font-bold text-blue-300 font-mono">${item.acidFormula}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Tên Axit:</span>
+                                <span class="font-medium text-slate-200">${item.acidName}</span>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-400 leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
+        // Mobile View Controller (Grid vs Compact List)
+        function initMobileViewToggle() {
+            const gridBtn = document.getElementById('viewGridBtn');
+            const listBtn = document.getElementById('viewListBtn');
+            const gridContainer = document.getElementById('gridContainer');
+            const listView = document.getElementById('mobileListView');
+
+            if (!gridBtn || !listBtn) return;
+
+            gridBtn.addEventListener('click', () => {
+                gridBtn.className = "px-2.5 py-1.5 rounded-md font-semibold bg-blue-600 text-white";
+                listBtn.className = "px-2.5 py-1.5 rounded-md font-semibold text-slate-400";
+                gridContainer.classList.remove('hidden');
+                listView.classList.add('hidden');
+            });
+
+            listBtn.addEventListener('click', () => {
+                listBtn.className = "px-2.5 py-1.5 rounded-md font-semibold bg-blue-600 text-white";
+                gridBtn.className = "px-2.5 py-1.5 rounded-md font-semibold text-slate-400";
+                gridContainer.classList.add('hidden');
+                listView.classList.remove('hidden');
+                renderMobileListView();
+            });
+        }
+
+        // Render Compact Mobile List
+        function renderMobileListView() {
+            const listView = document.getElementById('mobileListView');
+            listView.innerHTML = '';
+
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const activeCategoryBtn = document.querySelector('.cat-btn.active');
+            const selectedCat = activeCategoryBtn ? activeCategoryBtn.dataset.cat : 'all';
+
+            elementsData.forEach(el => {
+                const matchesSearch = !query || el.z.toString() === query || el.sym.toLowerCase().includes(query) || el.nameVi.toLowerCase().includes(query) || el.nameEn.toLowerCase().includes(query);
+                const matchesCategory = selectedCat === 'all' || el.cat === selectedCat;
+
+                if (matchesSearch && matchesCategory) {
+                    const card = document.createElement('div');
+                    card.className = `p-3 rounded-xl border cat-${el.cat} flex items-center justify-between cursor-pointer active:scale-95 transition-transform`;
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg border flex items-center justify-center font-bold text-base bg-slate-900/60">${el.sym}</div>
+                            <div>
+                                <div class="font-bold text-sm text-white">${el.nameVi} <span class="text-xs text-slate-400 font-normal">(${el.nameEn})</span></div>
+                                <div class="text-[10px] text-slate-400">Chu kỳ ${el.period} - Nhóm ${el.group} | ${categoryLabels[el.cat] || el.cat}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-bold text-blue-300">Z = ${el.z}</div>
+                            <div class="text-[10px] text-slate-400">${el.mass} u</div>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openModal(el));
+                    listView.appendChild(card);
+                }
+            });
+        }
+
+        // Overwrite ApplyFilters to update mobile list view as well
+        const originalApplyFilters = applyFilters;
+        applyFilters = function() {
+            originalApplyFilters();
+            if (!document.getElementById('mobileListView').classList.contains('hidden')) {
+                renderMobileListView();
+            }
+        };
+
+        // Initialize additions on window load
+        const originalOnLoad = window.onload;
+        window.onload = function() {
+            if (originalOnLoad) originalOnLoad();
+            initMobileViewToggle();
+        };
+    </script>
+</body>
+</html>
